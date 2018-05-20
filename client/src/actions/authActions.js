@@ -32,7 +32,7 @@ export const setCurrentUser = (decoded) => {
 
 export const loginUser = (userData) => dispatch => {
 axios.post('/api/users/login', userData).then(res => {
-
+console.log('line 35   '+userData.email);
 // save to local storage
 const { token } = res.data;
 localStorage.setItem('jwtToken', token);
@@ -51,6 +51,19 @@ dispatch(setCurrentUser(decoded));
 
 });
 
-
-
 };
+
+
+// logout
+
+export const logout = () => dispatch => {
+  //remove token
+  localStorage.removeItem('jwtToken');
+
+  // rempve auth header
+  setAuthToken(false);
+  // set current user to empty Object
+
+ dispatch(setCurrentUser({}));
+
+}

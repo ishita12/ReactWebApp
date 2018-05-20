@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as loginActions from '../../actions/authActions';
 import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
+import TextFieldGroup from '../commons/TextFielddGroup';
 
 class Login extends Component {
 
@@ -13,24 +14,115 @@ class Login extends Component {
 
       email: '',
       password: '',
-      title: '',
-      errors: {}
+      role: '',
+      errors: {},
+      loginForm: {
+        email: {
+      elementType: 'input',
+      elementConfig: {
+         type: 'text',
+         placeholder: 'email',
+
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    password: {
+      elementType: 'input',
+      elementConfig: {
+         type: 'password',
+         placeholder: 'password',
+         error: ''
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+
+
+    role: {
+      elementType: 'select',
+      elementConfig: {
+        options: [{value: 'supervisor', displayValue: 'supervisor'},
+                   {value: 'proctor', displayValue: 'proctor'}
+                 ],
+        placeholder: ''
+      },
+      value: 'supervisor',
+      validation: {},
+      valid: true
+    }
+  }
       }
-    this.onChange = this.onChange.bind(this);
+    this.inputChangedHandler = this.inputChangedHandler.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
+  componentDidMount() {
+/*    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    } */
+  }
+
+
+  checkValidity(value, rules) {
+
+let isValid = true;
+if(!rules) {
+  return true;
+}
+if(rules.required) {
+  isValid = value.trim() !== '' && isValid;
+}
+
+
+return isValid;
+
+}
+
+  inputChangedHandler =(event, inputIdentifier) => {
+
+  const updatedLoginForm = {
+    ...this.state.loginForm
+  };
+  const updatedFormElement = {
+    ...updatedLoginForm[inputIdentifier]
+  };
+  updatedFormElement.value = event.target.value;
+  updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+  updatedFormElement.touched = true;
+  updatedLoginForm[inputIdentifier] = updatedFormElement;
+
+  let formIsValid = true;
+
+  for(let inputIdentifier in updatedLoginForm) {
+    formIsValid = updatedLoginForm[inputIdentifier].valid && formIsValid;
+  }
+
+  this.setState({loginForm: updatedLoginForm});
+
+  }
+
   onSubmit(event) {
     event.preventDefault();
+
     const loginUser = {
 
-        email: this.state.email,
-          password: this.state.password,
-          title: this.state.title
+        email: this.state.loginForm.email.value,
+          password: this.state.loginForm.password.value,
+          role: this.state.loginForm.role.value
     }
   this.props.loginUser(loginUser);
   }
   onChange(event) {
   this.setState({[event.target.name]: event.target.value})
+  console.log('line 122   '+this.state.email+'   '+this.state.password);
   }
 
 
@@ -41,7 +133,7 @@ if(nextProps.auth.isAuthenticated) {
 
   if(nextProps.errors) {
     this.setState({errors: nextProps.errors});
-    console.log(this.state.errors);
+    console.log('line 133 '+this.state.errors);
   }
   }
 
@@ -49,6 +141,34 @@ if(nextProps.auth.isAuthenticated) {
   render () {
 
 const errors = this.state.errors;
+
+const formElementArray = [];
+
+for(let key in this.state.loginForm) {
+console.log('line 147  '+key);
+  formElementArray.push({
+    id: key,
+    config: this.state.loginForm[key]
+  });
+}
+
+let form = formElementArray.map(formElement => (
+
+
+<TextFieldGroup
+key={formElement.id}
+elementType={formElement.config.elementType}
+elementConfig={formElement.config.elementConfig}
+value={formElement.config.value}
+changed={(event) => this.inputChangedHandler(event, formElement.id)}
+placeholder={formElement.config.elementConfig.placeholder}
+error={this.state.errors}
+inValid={!formElement.config.valid}
+
+touched={formElement.config.touched}
+/>
+
+));
 
    return (
 
@@ -59,35 +179,8 @@ const errors = this.state.errors;
                <h1 className="display-4 text-center">Log In</h1>
                <p className="lead text-center">Sign in to your Proctor account</p>
                <form onSubmit={this.onSubmit}>
-                 <div className="form-group">
-                   <select className="form-control form-control-lg" value={this.state.title}>
-                    <option value="supervisor" value={this.state.title}>supervisor</option>
-                      <option value="proctor" value={this.state.title}>proctor</option>
-                    </select>
-                  </div>
-                   <div className="form-group">
-                   <input type="email"
-                     className={classnames('form-control form-control-lg', {
-                       'is-invalid': errors.email
-                     })}
-                     value={this.state.email}
-                     onChange={this.onChange}
-                      placeholder="Email Address" name="email" />
-                   {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
 
-               </div>
-                 <div className="form-group">
-                   <input type="password"
-                     className={classnames('form-control form-control-lg', {
-                       'is-invalid': errors.password
-                     })}
-                     value={this.state.password}
-                      onChange={this.onChange}
-                  
-                      placeholder="Password" name="password" />
-                   {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
-
-               </div>
+               {form}
                  <input type="submit" className="btn btn-info btn-block mt-4" />
                </form>
              </div>

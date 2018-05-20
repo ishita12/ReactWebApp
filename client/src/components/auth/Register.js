@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import * as registerActions from '../../actions/authActions';
 import { withRouter } from 'react-router-dom';
+import TextFieldGroup from '../commons/TextFielddGroup';
 class Register extends Component {
 
 constructor() {
@@ -13,10 +14,123 @@ constructor() {
     email: '',
     password: '',
     password2: '',
-    errors: {}
+    errors: {},
+    registerForm: {
+      name: {
+    elementType: 'input',
+    elementConfig: {
+       type: 'text',
+       placeholder: 'name',
+
+    },
+    value: '',
+    validation: {
+      required: true
+    },
+    valid: false,
+    touched: false
+  },
+      email: {
+    elementType: 'input',
+    elementConfig: {
+       type: 'text',
+       placeholder: 'email',
+
+    },
+    value: '',
+    validation: {
+      required: true
+    },
+    valid: false,
+    touched: false
+  },
+  password: {
+    elementType: 'input',
+    elementConfig: {
+       type: 'password',
+       placeholder: 'password',
+       error: ''
+    },
+    value: '',
+    validation: {
+      required: true
+    },
+    valid: false,
+    touched: false
+  },
+  password2: {
+    elementType: 'input',
+    elementConfig: {
+       type: 'password',
+       placeholder: 'password2',
+       error: ''
+    },
+    value: '',
+    validation: {
+      required: true
+    },
+    valid: false,
+    touched: false
+  },
+
+  role: {
+    elementType: 'select',
+    elementConfig: {
+      options: [{value: 'supervisor', displayValue: 'supervisor'},
+                 {value: 'proctor', displayValue: 'proctor'}
+               ],
+      placeholder: ''
+    },
+    value: 'supervisor',
+    validation: {},
+    valid: true
   }
-  this.onChange = this.onChange.bind(this);
+}
+  }
+    this.inputChangedHandler = this.inputChangedHandler.bind(this);
   this.onSubmit = this.onSubmit.bind(this);
+}
+componentDidMount() {
+  if(this.props.auth.isAuthenticated) {
+    this.props.history.push('/dashboard');
+  }
+}
+checkValidity(value, rules) {
+
+let isValid = true;
+if(!rules) {
+return true;
+}
+if(rules.required) {
+isValid = value.trim() !== '' && isValid;
+}
+
+
+return isValid;
+
+}
+
+inputChangedHandler =(event, inputIdentifier) => {
+
+const updatedRegisterForm = {
+  ...this.state.registerForm
+};
+const updatedFormElement = {
+  ...updatedRegisterForm[inputIdentifier]
+};
+updatedFormElement.value = event.target.value;
+updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+updatedFormElement.touched = true;
+updatedRegisterForm[inputIdentifier] = updatedFormElement;
+
+let formIsValid = true;
+
+for(let inputIdentifier in updatedRegisterForm) {
+  formIsValid = updatedRegisterForm[inputIdentifier].valid && formIsValid;
+}
+
+this.setState({registerForm: updatedRegisterForm});
+
 }
 
 componentWillReceiveProps = (nextProps) => {
@@ -31,10 +145,10 @@ if(nextProps.errors) {
 onSubmit(event) {
   event.preventDefault();
   const newUser = {
-    name: this.state.name,
-      email: this.state.email,
-        password: this.state.password,
-          password2: this.state.password2
+    name: this.state.registerForm.name.value,
+      email: this.state.registerForm.email.value,
+        password: this.state.registerForm.password.value,
+          password2: this.state.registerForm.password2.value
   }
 
 this.props.registerUser(newUser, this.props.history);
@@ -48,6 +162,36 @@ this.setState({[event.target.name]: event.target.value})
 
 const {errors} = this.state;
 
+
+const formElementArray = [];
+
+for(let key in this.state.registerForm) {
+console.log('line 147  '+key);
+  formElementArray.push({
+    id: key,
+    config: this.state.registerForm[key]
+  });
+}
+
+let form = formElementArray.map(formElement => (
+
+
+<TextFieldGroup
+key={formElement.id}
+elementType={formElement.config.elementType}
+elementConfig={formElement.config.elementConfig}
+value={formElement.config.value}
+changed={(event) => this.inputChangedHandler(event, formElement.id)}
+placeholder={formElement.config.elementConfig.placeholder}
+error={this.state.errors}
+inValid={!formElement.config.valid}
+
+touched={formElement.config.touched}
+/>
+
+));
+
+
    return (
 
      <div className="register">
@@ -57,49 +201,9 @@ const {errors} = this.state;
               <h1 className="display-4 text-center">Sign Up</h1>
               <p className="lead text-center">Create your proctor account</p>
               <form noValidate onSubmit={this.onSubmit}>
-                <div className="form-group">
-                  <input type="text"
-                    className={classnames('form-control form-control-lg', {
-                      'is-invalid': errors.name
-                    })}
-                    placeholder="Name"
-                    value={this.state.name}
-                    onChange={this.onChange}
-                    name="name"/>
-                  {errors.name && (<div className="invalid-feedback">{errors.name}</div>)}
-                </div>
-                <div className="form-group">
-                  <input type="email"
-                    value={this.state.email}
-                      onChange={this.onChange}
-                      className={classnames('form-control form-control-lg', {
-                        'is-invalid': errors.email
-                      })}
-                     placeholder="Email Address"
-                     name="email" />
-                   {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
-                  <small className="form-text text-muted">This site uses Gravatar so if you want a profile image, use a Gravatar email</small>
-                </div>
-                <div className="form-group">
-                  <input type="password"
-                      value={this.state.password}
-                        onChange={this.onChange}
-                        className={classnames('form-control form-control-lg', {
-                          'is-invalid': errors.password
-                        })}
-                    placeholder="Password" name="password" />
-                  {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
-                </div>
-                <div className="form-group">
-                  <input type="password"
-                     value={this.state.password2}
-                       onChange={this.onChange}
-                       className={classnames('form-control form-control-lg', {
-                         'is-invalid': errors.password2
-                       })}
-                    placeholder="Confirm Password" name="password2" />
-                  {errors.password2 && (<div className="invalid-feedback">{errors.password2}</div>)}
-                </div>
+
+                       {form}
+
                 <input type="submit" className="btn btn-info btn-block mt-4" />
               </form>
             </div>
