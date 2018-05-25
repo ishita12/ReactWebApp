@@ -53,7 +53,8 @@ class Login extends Component {
         options: [{value: 'supervisor', displayValue: 'supervisor'},
                    {value: 'proctor', displayValue: 'proctor'}
                  ],
-        placeholder: ''
+        placeholder: 'role',
+        error: ''
       },
       value: 'supervisor',
       validation: {},

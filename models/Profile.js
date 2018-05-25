@@ -22,6 +22,9 @@ status: {
   type: String,
   required: true
 },
+bio: {
+  type: String
+},
 experience: [
     {
       title: {
@@ -52,8 +55,7 @@ experience: [
         required: true
       },
       fieldofstudy: {
-        type: String,
-        required: true
+        type: String
       },
       from: {
         type: Date,
@@ -65,9 +67,6 @@ experience: [
       current: {
         type: Boolean,
         default: false
-      },
-      description: {
-        type: String
       }
     }
   ]

@@ -23,7 +23,8 @@ date: {
   default: Date.now
 },
 role: {
-  type: String
+  type: String,
+  required: true
 }
 
 });

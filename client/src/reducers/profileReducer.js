@@ -27,6 +27,12 @@ const profReducer = (state= initialState, action) => {
       ...state,
       profile: null
     }
+  case actionTypes.GET_PROFILES:
+    return {
+      ...state,
+      profiles: action.payload,
+      loading: false
+    }
 
 
 

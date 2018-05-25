@@ -82,7 +82,7 @@ constructor() {
       placeholder: ''
     },
     value: 'supervisor',
-    validation: {},
+    validation: {  required: true },
     valid: true
   }
 }
@@ -148,7 +148,8 @@ onSubmit(event) {
     name: this.state.registerForm.name.value,
       email: this.state.registerForm.email.value,
         password: this.state.registerForm.password.value,
-          password2: this.state.registerForm.password2.value
+          password2: this.state.registerForm.password2.value,
+          role: this.state.registerForm.role.value
   }
 
 this.props.registerUser(newUser, this.props.history);

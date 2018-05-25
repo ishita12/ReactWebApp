@@ -21,7 +21,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
 const errors = {};
 
 Profile.findOne({ user: req.user.id })
-.populate('user', ['name', 'avatar'])
+.populate('user', ['name', 'avatar', 'role'])
 .then(profile => {
 if(!profile) {
   console.log('line 23  ');
@@ -220,8 +220,7 @@ const newEdu = {
   fieldofstudy: req.body.fieldofstudy,
   from: req.body.from,
   to: req.body.to,
-  current: req.body.current,
-  description: req.body.description
+  current: req.body.current
 }
 
 // add to experience

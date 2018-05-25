@@ -21,10 +21,7 @@ if(validator.isEmpty(data.degree)) {
 }
 
 
-if(validator.isEmpty(data.fieldofstudy)) {
 
-  errors.fieldofstudy = 'fieldofstudy is required';
-}
 
 
 if(validator.isEmpty(data.from)) {

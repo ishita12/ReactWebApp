@@ -10,6 +10,15 @@ module.exports = function validateProfileInput(data) {
     console.log('handleeeee' + data.handle);
     errors.handle = 'Handle is required';
   }
+  if(validator.isEmpty(data.location)) {
+
+    errors.location = 'location is required';
+  }
+
+  if(validator.isEmpty(data.department)) {
+
+    errors.department = 'department is required';
+  }
 
 if(!validator.isLength(data.handle, { min: 2, max: 40 })) {
 

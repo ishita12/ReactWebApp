@@ -45,7 +45,8 @@ d: 'mm' //default
   name: req.body.name,
   email: req.body.email,
   avatar: avatar,
-  password: req.body.password
+  password: req.body.password,
+  role: req.body.role
 
   });
 
@@ -77,16 +78,23 @@ router.post('/login', (req,res) => {
   }
 const email = req.body.email;
 const password = req.body.password;
-
+const role = req.body.role;
 User.findOne({email: email}, (err, user) => {
 if(!user) {
   errors.email = 'user not found';
   return res.status(404).json(errors);
-} else {
+}
+if(user.role !== role) {
+  errors.role = 'role does not match';
+  return res.status(404).json(errors);
+}
+
+else {
 
 bcrypt.compare(password, user.password).then(isMatch => {
   if(isMatch) {
-const payload = { id: user.id, name: user.name, avatar: user.avatar };// creating jwt payload
+    console.log('line 97   '+user.role);
+const payload = { id: user.id, name: user.name, avatar: user.avatar, role: user.role };// creating jwt payload
 
   jwt.sign(payload, keys.secret, {expiresIn: 3600}, (err, token) => {
 
@@ -114,7 +122,8 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
     {
       id: req.user.id,
 name: req.user.name,
-email: req.user.email
+email: req.user.email,
+role: req.user.role
    }
  );
 });
