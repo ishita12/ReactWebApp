@@ -8,6 +8,7 @@ import * as dashboardActions from '../../actions/profileActions';
 import { Link } from 'react-router-dom';
 import Education from './Education';
 import PostShifts from '../PostShifts/PostShifts';
+import ViewShifts from '../PostShifts/ViewShifts';
 class Dashboard extends Component {
 
 componentDidMount() {
@@ -26,11 +27,25 @@ const { profile, loading } = this.props.profile;
 const role = user.role;
 console.log('role is  '+role);
 let post = null;
+let post1=null;
 if(role === 'supervisor') {
-  post=<Link to="/postShifts" component={PostShifts} className="btn btn-warning mb-3 float-left">Post Shifts Here</Link>
+  post=(
+    <Link to="/postShifts" component={PostShifts} className="btn btn-warning mb-3 float-left">Post Shifts Here</Link>
+
+    );
+
+    post1 = (
+
+      <Link to="/viewShifts"  component={ViewShifts} className="btn btn-info mb-3 float-bottom">
+        View Shifts
+        </Link>
+
+    );
+
   console.log('post shift');
 } else {
   post = null;
+  post1=null;
 }
 let dash = null;
 if(profile === null || loading) {
@@ -89,7 +104,7 @@ dash = (
 
 {dash}
 {post}
-
+{post1}
 </div>
   </div>
    </div>

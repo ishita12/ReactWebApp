@@ -21,6 +21,7 @@ export const registerUser = (userData, history) => dispatch => {
 
 //set logged in user
 export const setCurrentUser = (decoded) => {
+  console.log('logged in user is   '+decoded.id);
   return {
     type: actionTypes.SET_CURRENT_USER,
     payload: decoded

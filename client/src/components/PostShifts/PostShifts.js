@@ -24,7 +24,7 @@ onSubmit(e) {
 
   e.preventDefault();
 
-  const dd = new Date(this.state.shiftDate);
+  const dd = new Date(this.state.shiftDate).toISOString();
 
 const today = Date.now();
 if(dd <= today) {
@@ -80,7 +80,9 @@ onChange={this.onChange}
 
 <input type="submit" className="btn btn-info btn-block mt-4" />
 </form>
-
+<Link to="/dashboard" className="btn btn-warning btn-block mt-4">
+Back
+</Link>
 </div>
 
 );

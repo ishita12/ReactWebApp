@@ -5,8 +5,11 @@ module.exports = function validatePostShiftInput(data) {
 
   data.hall = !isEmpty(data.hall) ? data.hall : '';
   data.shiftType = !isEmpty(data.shiftType) ? data.shiftType : '';
+console.log('inside validator    '+typeof data.hall);
+
 
   if(validator.isEmpty(data.hall)) {
+    console.log('hall is empty  ');
     errors.hall = 'Hall is required';
   }
   if(validator.isEmpty(data.shiftType)) {
@@ -26,7 +29,6 @@ module.exports = function validatePostShiftInput(data) {
 
     errors.timeOut = 'Time Out is required';
   }
-
 
 
 

@@ -11,6 +11,10 @@ const PostShiftSchema = new Schema({
    type: String,
    required: true
  },
+ shiftDate: {
+   type: Date,
+   required: true
+ },
 shiftType: {
   type: String,
   required: true

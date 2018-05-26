@@ -6,7 +6,26 @@ const TextFieldGroup = (props) => {
 
   let inputElement = null;
   let err = props.error;
-  let elType = props.elementConfig.placeholder;
+  let elType = props.placeholder;
+console.log('line 10    '+elType+'    ');
+/*
+if(elType === 'hall') {
+  err = err.hall;
+  console.log('line 29    '+err.hall);
+}
+if(elType === 'shiftType') {
+  err = err.shiftType;
+}
+if(elType === 'timeIn') {
+  err = err.timeIn;
+}
+if(elType === 'timeOut') {
+  err = err.timeOut;
+}
+if(elType === 'hours') {
+  err = err.hours;
+}*/
+
 
 if(elType==='email') {
   err = err.email;
@@ -23,21 +42,9 @@ if(elType === 'password') {
 if(elType === 'name') {
   err = err.name;
 }
-if(elType === 'hall') {
-  err = err.hall;
-}
-if(elType === 'shiftType') {
-  err = err.shiftType;
-}
-if(elType === 'timeIn') {
-  err = err.timeIn;
-}
-if(elType === 'timeOut') {
-  err = err.timeOut;
-}
-if(elType === 'hours') {
-  err = err.hours;
-}
+
+
+
 if(elType === 'password2') {
   err = err.password2;
 }

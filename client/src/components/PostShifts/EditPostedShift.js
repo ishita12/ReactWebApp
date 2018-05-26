@@ -3,36 +3,34 @@ import PropTypes from 'prop-types';
 import TextFieldGroup from '../commons/TextFielddGroup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Spinner from '../commons/Spinner';
 import { withRouter } from 'react-router-dom';
+import isEmpty from '../../validation/is-empty';
 import * as postShiftActions from '../../actions/postShiftActions';
 
-class PostShiftItem extends Component {
+class EditPostedShift extends Component {
 
 constructor(props) {
   super(props);
-  const date = this.props.location.state.referrer;
-  const date1 = new Date(date);
-  const ds = new Date(date).toISOString();
-  date1.setTime( date1.getTime() + date1.getTimezoneOffset()*60*1000 );
-  console.log('okkk        '+date1.toDateString());
-  console.log('date ->    '+ds)
+  const shiftId = this.props.location.state.referrer;
+  console.log('inside constructor   '+shiftId);
   this.state = {
 
+    errors: {},
     postShiftForm: {
       shiftDate: {
         elementType: 'input',
         elementConfig: {
-           type: 'text',
+           type: 'date',
            placeholder: 'shiftDate',
            error: ''
         },
-        value: date1.toDateString(),
+        value: '',
         validation: {
           required: true
         },
         valid: false,
-        touched: false,
-        disabled: true
+        touched: false
       },
       hall: {
         elementType: 'select',
@@ -90,6 +88,7 @@ constructor(props) {
     valid: false,
     touched: false,
     disabled: true
+
   },
 
   timeOut: {
@@ -105,7 +104,7 @@ constructor(props) {
     },
     valid: false,
     touched: false,
-    disabled: true
+      disabled: true
   },
   hours: {
 elementType: 'input',
@@ -120,7 +119,7 @@ validation: {
 },
 valid: false,
 touched: false,
-disabled: true
+  disabled: true
 }
 },
   errors: ''
@@ -130,6 +129,109 @@ disabled: true
   this.onSubmit = this.onSubmit.bind(this);
 }
 
+
+
+  componentWillReceiveProps = (nextProps) => {
+
+  if(nextProps.errors) {
+    this.setState({errors: nextProps.errors});
+
+  }
+if(nextProps.shift.shift) {
+  const shift = nextProps.shift.shift;
+ shift.shiftDate = !isEmpty(shift.shiftDate) ? shift.shiftDate: '';
+ shift.hall = !isEmpty(shift.hall) ? shift.hall: '';
+shift.shiftType = !isEmpty(shift.shiftType) ? shift.shiftType: '';
+shift.timeIn = !isEmpty(shift.timeIn) ? shift.timeIn: '';
+shift.timeOut = !isEmpty(shift.timeOut) ? shift.timeOut: '';
+shift.hours = !isEmpty(shift.hours) ? shift.hours: '';
+
+
+
+
+const updatedPostShiftForm = {
+...this.state.postShiftForm
+};
+let updatedFormElement = {};
+if(this.state.postShiftForm.hall){
+ updatedFormElement = {
+  ...updatedPostShiftForm['hall']
+};
+updatedFormElement.value = shift.hall;
+updatedPostShiftForm['hall'] = updatedFormElement;
+this.setState({postShiftForm: updatedPostShiftForm});
+}
+
+if(this.state.postShiftForm.shiftDate){
+ updatedFormElement = {
+  ...updatedPostShiftForm['shiftDate']
+};
+let a = shift.shiftDate;
+let b = new Date(a);
+console.log('date is   '+b+'    '+b.toDateString());
+
+
+
+
+    let  month = '' + (b.getMonth() + 1);
+    let  day = '' + b.getDate();
+    let  year = b.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  let ress= [year, month, day].join('-');
+
+
+
+
+
+
+
+
+updatedFormElement.value = ress;
+updatedPostShiftForm['shiftDate'] = updatedFormElement;
+this.setState({postShiftForm: updatedPostShiftForm});
+
+}
+if(this.state.postShiftForm.shiftType){
+ updatedFormElement = {
+  ...updatedPostShiftForm['shiftType']
+};
+updatedFormElement.value = shift.shiftType;
+updatedPostShiftForm['shiftType'] = updatedFormElement;
+this.setState({postShiftForm: updatedPostShiftForm});
+
+}
+if(this.state.postShiftForm.timeIn){
+ updatedFormElement = {
+  ...updatedPostShiftForm['timeIn']
+};
+updatedFormElement.value = shift.timeIn;
+updatedPostShiftForm['timeIn'] = updatedFormElement;
+this.setState({postShiftForm: updatedPostShiftForm});
+}
+if(this.state.postShiftForm.timeIn){
+ updatedFormElement = {
+  ...updatedPostShiftForm['timeOut']
+};
+updatedFormElement.value = shift.timeOut;
+updatedPostShiftForm['timeOut'] = updatedFormElement;
+this.setState({postShiftForm: updatedPostShiftForm});
+}
+if(this.state.postShiftForm.hours){
+ updatedFormElement = {
+  ...updatedPostShiftForm['hours']
+};
+updatedFormElement.value = shift.hours;
+updatedPostShiftForm['hours'] = updatedFormElement;
+this.setState({postShiftForm: updatedPostShiftForm});
+}
+this.setState({postShiftForm: updatedPostShiftForm});
+
+}
+
+  }
 
 
 
@@ -158,6 +260,7 @@ let timein=null;
 let timeout = null;
 let t1=null;
 let t2=null;
+
 const updatedPostShiftForm = {
   ...this.state.postShiftForm
 };
@@ -165,25 +268,20 @@ let updatedFormElement = {
   ...updatedPostShiftForm[inputIdentifier]
 };
 updatedFormElement.value = event.target.value;
+console.log('chnged hall is    '+event.target.value);
 updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
 updatedFormElement.touched = true;
 updatedPostShiftForm[inputIdentifier] = updatedFormElement;
-
+this.setState({postShiftForm: updatedPostShiftForm});
 let formIsValid = true;
 
 for(let inputIdentifier in updatedPostShiftForm) {
   formIsValid = updatedPostShiftForm[inputIdentifier].valid && formIsValid;
 }
 
-this.setState({postShiftForm: updatedPostShiftForm});
 
-console.log('line 111111111    '+this.state.postShiftForm.shiftType.value);
-console.log('line 155   '+updatedFormElement.elementConfig.placeholder);
-console.log('line 156   '+this.state.postShiftForm.shiftType.elementConfig.placeholder);
-console.log('line 157   '+updatedFormElement.value);
-//if(updatedFormElement.elementConfig.placeholder === this.state.postShiftForm.shiftType.elementConfig.placeholder) {
 
-  console.log('line 157   '+updatedFormElement.value);
+
   let shift = updatedFormElement.value;
   if(updatedFormElement.value === 'A') {
    timein = 8;
@@ -191,6 +289,12 @@ console.log('line 157   '+updatedFormElement.value);
    t1='8:00 AM';
    t2='12:00 PM';
 
+
+   updatedFormElement = this.state.postShiftForm.hall;
+   updatedFormElement.value =  event.target.value;
+   updatedPostShiftForm[inputIdentifier] = updatedFormElement;
+
+   this.setState({postShiftForm: updatedPostShiftForm});
    updatedFormElement = this.state.postShiftForm.timeIn;
    updatedFormElement.value = t1;
    updatedPostShiftForm[inputIdentifier] = updatedFormElement;
@@ -217,6 +321,12 @@ this.setState({postShiftForm: updatedPostShiftForm});
    timeout = 16;
    t1='12:00 PM';
    t2='8:00 PM';
+   updatedFormElement = this.state.postShiftForm.hall;
+   updatedFormElement.value =  event.target.value;
+   updatedPostShiftForm[inputIdentifier] = updatedFormElement;
+
+   this.setState({postShiftForm: updatedPostShiftForm});
+
    updatedFormElement = this.state.postShiftForm.timeIn;
    updatedFormElement.value = t1;
    updatedPostShiftForm[inputIdentifier] = updatedFormElement;
@@ -244,6 +354,14 @@ this.setState({postShiftForm: updatedPostShiftForm});
    timeout = 20;
    t1='4:00 PM';
    t2='8:00 PM';
+
+
+   updatedFormElement = this.state.postShiftForm.hall;
+   updatedFormElement.value =  event.target.value;
+   updatedPostShiftForm[inputIdentifier] = updatedFormElement;
+
+   this.setState({postShiftForm: updatedPostShiftForm});
+
    updatedFormElement = this.state.postShiftForm.timeIn;
    updatedFormElement.value = t1;
    updatedPostShiftForm[inputIdentifier] = updatedFormElement;
@@ -269,6 +387,13 @@ this.setState({postShiftForm: updatedPostShiftForm});
    timeout = 24;
    t1='8:00 PM';
    t2='12:00 PM';
+
+   updatedFormElement = this.state.postShiftForm.hall;
+   updatedFormElement.value =  event.target.value;
+   updatedPostShiftForm[inputIdentifier] = updatedFormElement;
+
+   this.setState({postShiftForm: updatedPostShiftForm});
+
    updatedFormElement = this.state.postShiftForm.timeIn;
    updatedFormElement.value = t1;
    updatedPostShiftForm[inputIdentifier] = updatedFormElement;
@@ -294,6 +419,14 @@ this.setState({postShiftForm: updatedPostShiftForm});
    timeout = 8;
    t1='12:00 AM';
    t2='8:00 AM';
+
+
+   updatedFormElement = this.state.postShiftForm.hall;
+   updatedFormElement.value =  event.target.value;
+   updatedPostShiftForm[inputIdentifier] = updatedFormElement;
+
+   this.setState({postShiftForm: updatedPostShiftForm});
+
    updatedFormElement = this.state.postShiftForm.timeIn;
    updatedFormElement.value = t1;
    updatedPostShiftForm[inputIdentifier] = updatedFormElement;
@@ -336,58 +469,76 @@ this.setState({postShiftForm: updatedPostShiftForm});
 
 
   console.log('line 216   '+shiftPosted.shiftDate+'   '+shiftPosted.hall+ '   '+shiftPosted.timeIn+ '    '+shiftPosted.timeOut+'   '+shiftPosted.shiftType);
-  this.props.registerShift(shiftPosted, this.props.history);
+  this.props.updateSingleShift(shiftPosted, this.props.history);
 
 
 
 
   }
 
-  componentWillReceiveProps = (nextProps) => {
-  console.log('inside next props   ');
-  /*
-  if(nextProps.errors) {
-    this.setState({errors: nextProps.errors});
-    console.log(this.state.errors);
-  }*/
+  componentDidMount() {
+    const id = this.props.location.state.referrer;
+    console.log('line 340    '+id);
+    this.props.getSinglePostedShift(id);
+
+
   }
+
 
 render () {
 
 const {errors} = this.state;
-const ddd = this.props.location.state.referrer;
+const  {shift}  = this.props.shift;
+console.log('line !!!!!!!!!!!   '+typeof shift+'      ');
+let test = null;
+if(shift === null || shift === undefined) {
 
-console.log('line 15   '+new Date(ddd));
+} else {
+
+  console.log('shift hall is   '+shift.hall+'    '+shift.shiftDate+'     '+shift.shiftType+'    '+shift.timeIn+'     '+shift.timeOut);
+
+  //this.setValues(shift.hall, shift.shiftDate, shift.shiftType, shift.timeIn, shift.timeOut, shift.timeOut);
 
 
 
-const formElementArray = [];
 
-for(let key in this.state.postShiftForm) {
-console.log('line 147  '+key);
-  formElementArray.push({
-    id: key,
-    config: this.state.postShiftForm[key]
-  });
+
+}
+if(shift === null ) {
+  test = <Spinner />;
+} else {
+
+  const formElementArray = [];
+
+  for(let key in this.state.postShiftForm) {
+  console.log('line 147  '+key);
+    formElementArray.push({
+      id: key,
+      config: this.state.postShiftForm[key]
+    });
+  }
+
+  test = formElementArray.map(formElement => (
+
+
+  <TextFieldGroup
+  key={formElement.id}
+  elementType={formElement.config.elementType}
+  elementConfig={formElement.config.elementConfig}
+  placeholder={formElement.config.elementConfig.placeholder}
+  value={formElement.config.value}
+  changed={(event) => this.inputChangedHandler(event, formElement.id)}
+  error={formElement.config.elementConfig.error}
+  inValid={!formElement.config.valid}
+  disabled={formElement.config.disabled}
+  touched={formElement.config.touched}
+  />
+
+  ));
+
 }
 
-let form = formElementArray.map(formElement => (
 
-
-<TextFieldGroup
-key={formElement.id}
-elementType={formElement.config.elementType}
-elementConfig={formElement.config.elementConfig}
-placeholder={formElement.config.elementConfig.placeholder}
-value={formElement.config.value}
-changed={(event) => this.inputChangedHandler(event, formElement.id)}
-error={formElement.config.elementConfig.error}
-inValid={!formElement.config.valid}
-disabled={formElement.config.disabled}
-touched={formElement.config.touched}
-/>
-
-));
 
    return (
 
@@ -398,8 +549,8 @@ touched={formElement.config.touched}
                <h1 className="display-4 text-center"></h1>
                <p className="lead text-center">Post Shift details</p>
                <form onSubmit={this.onSubmit}>
+                {test}
 
-               {form}
                  <input type="submit" className="btn btn-info btn-block mt-4" />
                </form>
                <Link to="/dashboard" className="btn btn-warning  mt-4">
@@ -420,14 +571,15 @@ touched={formElement.config.touched}
 
   }
 }
-PostShiftItem.propTypes = {
-  registerShift: PropTypes.func.isRequired,
+EditPostedShift.propTypes = {
+  updateSingleShift: PropTypes.func.isRequired,
   errors:  PropTypes.object.isRequired
 }
 
 
 const mapStateToProps = (state) => {
   return {
+  shift: state.postShiftReducer,
   errors: state.errReducer
   }
 }
@@ -435,10 +587,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
 
 return {
-registerShift:  (shiftPosted, history) => dispatch(postShiftActions.registerShift(shiftPosted, history))
+updateSingleShift:  (shiftPosted, history) => dispatch(postShiftActions.updateSingleShift(shiftPosted, history)),
+getSinglePostedShift: (id) => dispatch(postShiftActions.getSinglePostedShift(id))
 }
 
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostShiftItem);
+export default connect(mapStateToProps, mapDispatchToProps)(EditPostedShift);

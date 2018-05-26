@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as profileActions from '../../actions/profileActions';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import TextFieldGroup from '../commons/TextFielddGroup';
 class CreateProfile extends Component {
 
@@ -189,6 +190,9 @@ this.props.createProfile(profileData, this.props.history);
 
 <input type="submit" value="Submit"  className="btn btn-info btn-block mt-4" />
 </form>
+<Link to="/dashboard" className="btn btn-warning btn-block mt-4">
+Back
+</Link>
           </div>
           </div>
           </div>

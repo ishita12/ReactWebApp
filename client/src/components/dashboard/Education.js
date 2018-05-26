@@ -52,15 +52,15 @@ return (
 }
 
 
+
 const mapDispatchToProps = dispatch => {
 
-return {
-deleteEducation:  (edu) => dispatch(eduActions.deleteEducation(edu))
-}
+  return {
+    deleteEducation:  (edu) => dispatch(eduActions.deleteEducation(edu))
+  }
 
 }
 Education.propTypes = {
   deleteEducation: PropTypes.func.isRequired
 }
-
 export default connect(null,mapDispatchToProps)(Education);

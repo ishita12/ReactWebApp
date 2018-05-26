@@ -22,7 +22,9 @@ import EditProfile from './components/edit-profile/Edit-Profile';
 import AddEducation from './components/add-credentials/add-education';
 import PostShifts from './components/PostShifts/PostShifts';
 import PostShiftItem from './components/PostShifts/PostShiftItem';
-
+import ViewShifts from './components/PostShifts/ViewShifts';
+import ViewShift from './components/PostShifts/ViewShift';
+import EditPostedShift from './components/PostShifts/EditPostedShift';
 
 
 
@@ -80,7 +82,13 @@ class App extends Component {
                   component={EditProfile}
                 />
               </Switch>
-
+              <Switch>
+                <Private
+                  exact
+                  path="/edit-postedShift"
+                  component={EditPostedShift}
+                />
+              </Switch>
               <Switch>
                 <Private
                   exact
@@ -123,6 +131,14 @@ class App extends Component {
                   component={PostShiftItem}
                 />
               </Switch>
+              <Switch>
+                <Private
+                  exact
+                  path="/viewShifts"
+                  component={ViewShifts}
+                />
+              </Switch>
+
             </div>
             <Footer />
           </div>

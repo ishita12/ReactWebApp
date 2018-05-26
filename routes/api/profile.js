@@ -28,6 +28,7 @@ if(!profile) {
   errors.noprofile = 'There is no profile for the user';
   return res.status(404).json(errors);
 }
+console.log('inside current route  '+profile.status);
 res.json(profile);
 
 
