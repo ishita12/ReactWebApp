@@ -7,6 +7,9 @@ import { Link } from 'react-router-dom';
 import * as actions from '../../actions/postShiftActions';
 
 class ViewShifts  extends Component {
+
+
+
 componentDidMount () {
   const  user  = this.props.auth.user;
 

@@ -121,8 +121,7 @@ valid: false,
 touched: false,
   disabled: true
 }
-},
-  errors: ''
+}
 
   }
   this.inputChangedHandler = this.inputChangedHandler.bind(this);
@@ -320,7 +319,7 @@ this.setState({postShiftForm: updatedPostShiftForm});
    timein = 12;
    timeout = 16;
    t1='12:00 PM';
-   t2='8:00 PM';
+   t2='4:00 PM';
    updatedFormElement = this.state.postShiftForm.hall;
    updatedFormElement.value =  event.target.value;
    updatedPostShiftForm[inputIdentifier] = updatedFormElement;
@@ -466,12 +465,28 @@ this.setState({postShiftForm: updatedPostShiftForm});
         shiftDate: this.state.postShiftForm.shiftDate.value
     }
 
+    const errors = {};
+      const dd = new Date(this.state.postShiftForm.shiftDate.value);
+
+    const today = new Date(Date.now());
+    dd.setTime( dd.getTime() + dd.getTimezoneOffset()*60*1000 );
+    console.log('lets compare the dates   '+dd +'        '+today);
+
+
+    if(dd <= today) {
+
+    errors.passedDate = "This date has already passed. You cannot edit this shift";
+    this.setState({errors: errors});
+  //  this.props.history.push('/postShifts');
+    console.log('line 28   '+dd);
+    }
+else {
 
 
   console.log('line 216   '+shiftPosted.shiftDate+'   '+shiftPosted.hall+ '   '+shiftPosted.timeIn+ '    '+shiftPosted.timeOut+'   '+shiftPosted.shiftType);
   this.props.updateSingleShift(shiftPosted, this.props.history);
 
-
+}
 
 
   }
@@ -553,6 +568,7 @@ if(shift === null ) {
 
                  <input type="submit" className="btn btn-info btn-block mt-4" />
                </form>
+               <h3 style={{color:'red'}}>{this.state.errors.passedDate ? this.state.errors.passedDate : null} </h3>
                <Link to="/dashboard" className="btn btn-warning  mt-4">
                Back
                </Link>

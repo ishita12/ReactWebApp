@@ -14,12 +14,29 @@ router.post('/singleShift', passport.authenticate('jwt', { session: false }), (r
 
 // Get fields
 
-console.log('inside route  ');
+console.log('inside route  singleshift');
 const { errors, isValid } = validatePostShiftInput(req.body);
 if(!isValid) {
   console.log('errors present');
   return res.status(400).json(errors);
 }
+
+
+const dateToday = new Date(Date.now());
+console.log('todays date is   '+dateToday);
+
+const dateSelected = new Date(req.body.shiftDate);
+console.log('date selected    '+dateSelected);
+
+console.log('line 75 in route    '+new Date(dateSelected) >= new Date(dateToday));
+if(dateToday > dateSelected) {
+  console.log('the date has paased   ');
+  errors.passedDate='This date has already passed. You cannot post shift for this date';
+  res.status(404).json(errors);
+}
+
+
+
 
 PostShift.findOne({shiftDate: req.body.shiftDate, shiftType: req.body.shiftType, hall: req.body.hall}, (err, postShift) => {
 

@@ -10,7 +10,12 @@ class ProfileItem extends Component {
   render () {
 
 const { profile } = this.props;
-
+//console.log('user is  '+profile.user.name);
+if(profile.user === null) {
+  console.log('user is null ');
+} else {
+  console.log('not null');
+}
   return (
 <div className="card card-body bg-light mb-3">
 <div className="row">

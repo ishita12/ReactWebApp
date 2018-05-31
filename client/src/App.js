@@ -25,8 +25,10 @@ import PostShiftItem from './components/PostShifts/PostShiftItem';
 import ViewShifts from './components/PostShifts/ViewShifts';
 import ViewShift from './components/PostShifts/ViewShift';
 import EditPostedShift from './components/PostShifts/EditPostedShift';
-
-
+import ViewPostedShifts from './components/ProctorShifts/ViewPostedShifts';
+import IndividualShiftClaim from './components/ProctorShifts/IndividualShiftClaim';
+import IndividualShift from './components/Schedule/IndividualShift';
+import MySchedule from './components/Schedule/MySchedule';
 
 // check for token
 
@@ -106,6 +108,20 @@ class App extends Component {
               <Switch>
                 <Private
                   exact
+                  path="/individualShiftClaim"
+                  component={IndividualShiftClaim}
+                  />
+              </Switch>
+              <Switch>
+                <Private
+                  exact
+                  path="/individualShift"
+                  component={IndividualShift}
+                  />
+              </Switch>
+              <Switch>
+                <Private
+                  exact
                   path="/profiles"
                   component={Profiles}
                 />
@@ -138,7 +154,20 @@ class App extends Component {
                   component={ViewShifts}
                 />
               </Switch>
-
+              <Switch>
+                <Private
+                  exact
+                  path="/viewPostedShifts"
+                  component={ViewPostedShifts}
+                />
+              </Switch>
+              <Switch>
+                <Private
+                  exact
+                  path="/mySchedule"
+                  component={MySchedule}
+                />
+              </Switch>
             </div>
             <Footer />
           </div>

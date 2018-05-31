@@ -224,7 +224,7 @@ const newEdu = {
   current: req.body.current
 }
 
-// add to experience
+// add to education
 
 profile.education.unshift(newEdu);
 profile.save().then(profile => {

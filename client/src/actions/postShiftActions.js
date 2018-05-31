@@ -76,6 +76,7 @@ export const getPostedShifts = (id) => dispatch => {
 //delete shift
 
 export const deleteShift = (id) => dispatch => {
+    if(window.confirm('Are you sure?')) {
   axios.delete(`/api/postShift/shift/${id}`)
   .then(res => {
   dispatch({
@@ -88,6 +89,7 @@ export const deleteShift = (id) => dispatch => {
       payload: err.response.data
     })
   })
+}
 }
 
 

@@ -11,7 +11,8 @@ constructor(props) {
   super(props);
   this.state = {
     shiftDate: '',
-    redirect: false
+    redirect: false,
+    errors: {}
   };
   this.onChange = this.onChange.bind(this);
   this.onSubmit = this.onSubmit.bind(this);
@@ -23,12 +24,17 @@ constructor(props) {
 onSubmit(e) {
 
   e.preventDefault();
-
-  const dd = new Date(this.state.shiftDate).toISOString();
+const errors = {};
+  const dd = new Date(this.state.shiftDate);
 
 const today = Date.now();
+dd.setTime( dd.getTime() + dd.getTimezoneOffset()*60*1000 );
+console.log('lets compare the dates   '+dd.toDateString() +'        '+new Date(today));
+
 if(dd <= today) {
 
+errors.passedDate = "This date has already passed. You cannot post shift for this date";
+this.setState({errors: errors});
 this.props.history.push('/postShifts');
 console.log('line 28   '+dd);
 }
@@ -52,7 +58,7 @@ onChange(e) {
 
   render () {
     const { redirect } = this.state;
-
+   const {errors} = this.state;
 if(redirect) {
   return (
 
@@ -62,7 +68,7 @@ if(redirect) {
               }} />
   )
 }
-    const { errors } = this.state;
+
 return (
 <div className="PostShifts">
 <h1>Post Shifts here </h1>
@@ -80,6 +86,7 @@ onChange={this.onChange}
 
 <input type="submit" className="btn btn-info btn-block mt-4" />
 </form>
+<h3 style={{color:'red'}}>{this.state.errors.passedDate ? this.state.errors.passedDate : null} </h3>
 <Link to="/dashboard" className="btn btn-warning btn-block mt-4">
 Back
 </Link>

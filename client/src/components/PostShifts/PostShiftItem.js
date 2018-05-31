@@ -216,7 +216,7 @@ this.setState({postShiftForm: updatedPostShiftForm});
    timein = 12;
    timeout = 16;
    t1='12:00 PM';
-   t2='8:00 PM';
+   t2='4:00 PM';
    updatedFormElement = this.state.postShiftForm.timeIn;
    updatedFormElement.value = t1;
    updatedPostShiftForm[inputIdentifier] = updatedFormElement;
