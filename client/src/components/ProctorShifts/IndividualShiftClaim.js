@@ -43,17 +43,32 @@ if(dateToday <= date1) {
 
 
   };
+
+
+
+//  setTimeout(function() {this.checkShift(individualShift.shiftDate, individualShift.shiftType);}.bind(this), 1000);
+
 this.onSubmit = this.onSubmit.bind(this);
-  console.log('in constructor   '+individualShift.hall+'     '+individualShift.sid+'   '+this.state.user);
+  console.log('in constructor   '+individualShift.hall+'     '+individualShift.sid+'   '+this.state.user+'           '+date1);
 
 }
 
 componentDidMount() {
  const individualShift = this.props.location.state.referrerShift;
  const user = this.props.location.state.referrerUser;
+
+
+
+
 console.log('Individual shift hall is   '+individualShift.hall + '   '+user);
 }
 
+
+
+checkShift(shiftDate, shiftType) {
+
+
+}
 
 
 componentWillReceiveProps(nextProps) {
@@ -80,12 +95,39 @@ hours: this.state.hours
 
 }
 
-this.props.claimUserShift(shiftData, this.state.user, this.props.history);
+const{checkDroppedShift}=this.props.shiftsView;
+
+
+this.props.checkForSelectedDateAndType(shiftData.shiftDate, shiftData.shiftType);
+
+
+
+
+  setTimeout(function() {this.checkres(shiftData); }.bind(this), 1000);
+
 
 
 
 }
 
+
+
+checkres(shiftData) {
+
+
+  const {successVal} = this.props.shiftsView;
+  console.log('the value of success is    '+successVal.success);
+
+  if(successVal){
+
+    this.props.claimUserShift(shiftData, this.state.user, this.props.history);
+  }
+  else {
+    const errors = {};
+    errors.notToClaim = 'LOL. Try later';
+  }
+
+}
 
 
 render () {
@@ -167,7 +209,10 @@ disabled= {this.state.disabled}
 </form>
 <h3 style={{color:'red'}}>{this.state.errors.noclaim ? this.state.errors.noclaim : null} {this.state.errors.limit ? this.state.errors.limit : null}
 
-   {this.state.errors.cannotClaim ? this.state.errors.cannotClaim : null} {this.state.errors.passedDate ? this.state.errors.passedDate : null}</h3>
+   {this.state.errors.cannotClaim ? this.state.errors.cannotClaim : null} {this.state.errors.passedDate ? this.state.errors.passedDate : null}
+
+   {this.state.errors.cannotClaimShift ? this.state.errors.cannotClaimShift : null}
+ </h3>
 </div>
 </div>
 </div>
@@ -195,7 +240,8 @@ const mapDispatchToProps = dispatch => {
 
   return {
 
-    claimUserShift: (shift, userID, history) => dispatch(actions.claimUserShift(shift, userID, history))
+    claimUserShift: (shift, userID, history) => dispatch(actions.claimUserShift(shift, userID, history)),
+    checkForSelectedDateAndType: (shiftDate, shiftType) => dispatch(actions.checkForSelectedDateAndType(shiftDate, shiftType))
     }
 
 }

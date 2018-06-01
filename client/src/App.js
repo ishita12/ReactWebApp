@@ -29,7 +29,7 @@ import ViewPostedShifts from './components/ProctorShifts/ViewPostedShifts';
 import IndividualShiftClaim from './components/ProctorShifts/IndividualShiftClaim';
 import IndividualShift from './components/Schedule/IndividualShift';
 import MySchedule from './components/Schedule/MySchedule';
-
+import IndividualShiftReClaim from './components/ProctorShifts/IndividualShiftReClaim';
 // check for token
 
 if(localStorage.jwtToken) {
@@ -166,6 +166,13 @@ class App extends Component {
                   exact
                   path="/mySchedule"
                   component={MySchedule}
+                />
+              </Switch>
+              <Switch>
+                <Private
+                  exact
+                  path="/individualShiftReClaim"
+                  component={IndividualShiftReClaim}
                 />
               </Switch>
             </div>

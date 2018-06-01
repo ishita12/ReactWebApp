@@ -5,7 +5,8 @@ import isEmpty from '../validation/is-empty';
 const initialState = {
   shifts: null,
   shift: null,
-  loading: false
+  loading: false,
+  ids: {}
 }
 
 
@@ -38,6 +39,12 @@ case actionTypes.GET_POSTED_SHIFT:
    shift: action.payload,
    loading: false
  }
+
+case actionTypes.GET_PASSED_SHIFT_IDS:
+   return {
+     ...state,
+     ids: action.payload
+   }
   default:
     return state;
 

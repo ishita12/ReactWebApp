@@ -171,9 +171,17 @@ console.log('3');
 router.get('/all/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
 const errors = {};
 console.log('loggedin user id is   '+req.params.id);
-PostShift.find({user: req.params.id})
+const dateToday = new Date(Date.now());
+console.log('todays date is   '+dateToday);
+const dateToday2 = dateToday.toDateString();
+console.log('todays date2    '+dateToday2);
+PostShift.find({user: req.params.id, shiftDate: {$gte: dateToday2}})
 .populate('shift', ['shiftDate', 'hall', 'shiftType', 'timeIn', 'timeOut', 'hours'])
 .then(postedShifts => {
+
+
+
+
   if(!postedShifts) {
     errors.noPostedShifts = 'There are no shifts posted';
     res.status(404).json();
@@ -209,6 +217,47 @@ console.log('in route   '+req.params.id);
   });
 
 });
+
+
+
+
+
+
+
+// @route Get api/postShift/getpassedShiftIds
+// @desc Get Claimed shift ids
+// @access Private
+
+router.get('/getpassedShiftIds', passport.authenticate('jwt', { session: false }), (req, res) => {
+const errors = {};
+//console.log('loggedin user id is   '+req.user.id);
+console.log('inside getpassedShiftIds route   '+req.user.id);
+const dateToday = new Date(Date.now());
+console.log('todays date is   '+dateToday);
+const dateToday2 = dateToday.toDateString();
+console.log('todays date2    '+dateToday2);
+PostShift.find({user: req.user.id})
+.select({shiftDate: {$gte: dateToday2}})
+.then(ids => {
+  if(!ids) {
+    console.log('ids are   ');
+  res.json(ids);
+  } else {
+   console.log('the ids of all shifts are    '+ids);
+    res.json(ids);
+  }
+}).catch(err => {
+  res.status(404).json({claimshift: 'There are no shifts that have been claimed'});
+});
+
+
+
+});
+
+
+
+
+
 
 
 

@@ -8,6 +8,12 @@ import * as actions from '../../actions/postShiftActions';
 
 class ViewShifts  extends Component {
 
+constructor(props) {
+  super(props);
+
+  //this.props.getpassedShiftIds();
+}
+
 
 
 componentDidMount () {
@@ -69,7 +75,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
 
 return {
-getPostedShifts: (id) => dispatch(actions.getPostedShifts(id))
+getPostedShifts: (id) => dispatch(actions.getPostedShifts(id)),
+getpassedShiftIds: () => dispatch(actions.getpassedShiftIds())
 
 }
 

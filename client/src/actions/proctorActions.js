@@ -38,6 +38,34 @@ console.log('type of ids   '+typeof ids);
 }
 
 
+// checkForSelectedDateAndType
+
+
+export const checkForSelectedDateAndType = (shiftDate, shiftType) => dispatch => {
+
+ console.log('checkForSelectedDateAndType   action   '+ shiftDate+'         '+shiftType);
+
+   axios.get(`/api/proctor/checkForSelectedDateAndType/${shiftDate}/${shiftType}`)
+   .then(res => {
+     console.log('inside checkForSelectedDateAndType then');
+   dispatch({
+     type: actionTypes.GET_DROPPED_SHIFT_STATUS,
+     payload: res.data
+   })
+   }).catch(err => {
+     console.log('inside error');
+     dispatch({
+       type: actionTypes.GET_ERRORS,
+       payload: err.response.data
+     })
+   })
+
+
+}
+
+
+
+
 // dispatch action for deleting the shift from all shifts list which has been claimed
 
 export const deleteShiftFromDroppedList = (sd) => dispatch => {

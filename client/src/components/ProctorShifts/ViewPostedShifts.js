@@ -17,7 +17,8 @@ this.state = {
   shift: '',
   idArray: [],
   droppedIdArray: [],
-  test: false
+  test: false,
+  redirectVal: false
 }
 console.log('inside viewPostedShifts component');
 this.props.getDroppedShiftIdsByLoggedInUser(this.props.auth.user.id);
@@ -278,7 +279,11 @@ this.setState({redirect: true, shift: shift});
 
 }
 
-
+reclaimShift(shift) {
+  const userID = this.props.auth.user;
+  console.log('Inside reclaim method    '+shift._id+'        '+shift.hall+'        '+userID.id);
+  this.setState({redirectVal: true, shift: shift});
+}
 
 
 
@@ -287,6 +292,7 @@ this.setState({redirect: true, shift: shift});
   render () {
 console.log('5');
 const {redirect} = this.state;
+const {redirectVal} = this.state;
 const {shift} = this.state;
   const  user  = this.props.auth.user;
 if(redirect) {
@@ -300,6 +306,20 @@ if(redirect) {
   )
 
 }
+
+if(redirectVal) {
+  return (
+
+    <Redirect to={{
+                  pathname: '/individualShiftReClaim',
+                  state: { referrerShift: shift, referrerUser: user.id }
+              }} />
+
+
+  )
+}
+
+
   const { shifts } = this.props.shiftsView;
   const { errors } = this.state;
   console.log('line 42   '+typeof shifts);
@@ -331,7 +351,7 @@ for(var i in aa){
     <td>{shift.timeIn}</td>
     <td>{shift.timeOut}</td>
     <td>{shift.hours}</td>
-     {  JSON.stringify(this.state.droppedIdArray).indexOf(shift._id) > -1 ? (<td><button onClick={this.claimShift.bind(this, shift)} className="btn btn-warning">Reclaim   </button></td>) : (<td><button onClick={this.claimShift.bind(this, shift)} className="btn btn-info">Claim Shift</button></td>)}
+     {  JSON.stringify(this.state.droppedIdArray).indexOf(shift._id) > -1 ? (<td><button onClick={this.reclaimShift.bind(this, shift)} className="btn btn-warning">Reclaim   </button></td>) : (<td><button onClick={this.claimShift.bind(this, shift)} className="btn btn-info">Claim Shift</button></td>)}
 
     </tr>
 

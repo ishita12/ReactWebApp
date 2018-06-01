@@ -375,9 +375,42 @@ ProctorClaimShift.find()
   res.status(404).json({claimshift: 'There are no shifts that have been claimed'});
 });
 
+});
+
+
+
+
+
+
+// @route Get api/proctor
+// @desc Get dropped shift status
+// @access Private
+
+router.get('/checkForSelectedDateAndType/:shiftDate/:shiftType', passport.authenticate('jwt', { session: false }), (req, res) => {
+const errors = {};
+//console.log('loggedin user id is   '+req.user.id);
+console.log('inside checkForSelectedDateAndType route      '+req.params.shiftDate+'         '+req.params.shiftType+'         '+req.user.id);
+
+DroppedShifts.findOne({user: req.user.id, shiftDate: req.params.shiftDate, shiftType: req.params.shiftType})
+.then(shifts => {
+  if(!shifts) {
+  console.log('yes you can claim this shift yayyyy   ');
+  res.json({success: true});
+} if(shifts) {
+   console.log('You cannot claim any other shift on this date and time as you already have a shift scheduled for this timing that has not been picked up yet.     '+shifts);
+    errors.cannotClaimShift = 'You have dropped a shift at this schedule which has not been claimed yet. Try later';
+    res.status(404).json(errors);
+  }
+}).catch(err => {
+  res.status(404).json({claimshift: 'There are no shifts that have been claimed'});
+});
+
 
 
 });
+
+
+
 
 
 

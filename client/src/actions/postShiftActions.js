@@ -22,6 +22,32 @@ export const registerShift = (shiftPosted, history) => dispatch => {
 
 };
 
+
+// get the ids of shifts that have already passed
+
+
+
+export const getpassedShiftIds = () => dispatch => {
+  console.log('get getpassedShiftIds  ids action  ');
+
+    axios.get('/api/postShift/getpassedShiftIds')
+    .then(res => {
+      console.log('inside getpassedShiftIds then');
+    dispatch({
+      type: actionTypes.GET_PASSED_SHIFT_IDS,
+      payload: res.data
+    })
+    }).catch(err => {
+      console.log('inside error');
+      dispatch({
+        type: actionTypes.GET_ERRORS,
+        payload: err.response.data
+      })
+    })
+}
+
+
+
 // update sinle shift
 
 export const updateSingleShift = (shiftPosted, history) => dispatch => {

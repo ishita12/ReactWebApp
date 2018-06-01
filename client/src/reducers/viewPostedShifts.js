@@ -10,7 +10,9 @@ const initialState = {
   updatedShifts: {},
   claimedIds: {},
   allShifts: {},
-  droppedIds: {}
+  successVal: false,
+  droppedIds: {},
+  checkDroppedShift: {}
 }
 
 
@@ -66,6 +68,13 @@ console.log('2');
 
 
    }
+
+case actionTypes.GET_DROPPED_SHIFT_STATUS:
+  return {
+    ...state,
+    checkDroppedShift: action.payload,
+    successVal: action.payload
+  }
 
   default:
     return state;

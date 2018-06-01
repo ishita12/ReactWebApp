@@ -45,7 +45,7 @@ componentDidMount() {
   const {updatedShifts} = this.props.viewPostedShifts;
   const sd = updatedShifts.sid;
   console.log('the id of claimed shift is   '+ updatedShifts.sid);
-  this.props.deleteShiftFromDroppedList(sd);
+//  this.props.deleteShiftFromDroppedList(sd);
 
 
 }

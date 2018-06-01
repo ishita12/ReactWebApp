@@ -30,15 +30,20 @@ const errors = {};
 const today = Date.now();
 dd.setTime( dd.getTime() + dd.getTimezoneOffset()*60*1000 );
 console.log('lets compare the dates   '+dd.toDateString() +'        '+new Date(today));
+console.log('THE TWO DATES ARE     '+dd+'          '+new Date(today));
 
-if(dd <= today) {
+if(dd===new Date(today)) {
+  console.log("they are equal   ");
+}
+if(dd < today) {
 
 errors.passedDate = "This date has already passed. You cannot post shift for this date";
 this.setState({errors: errors});
 this.props.history.push('/postShifts');
 console.log('line 28   '+dd);
 }
-else {
+
+if(dd>=today) {
 let out=null;
   console.log('line 37   '+this.state.shiftDate);
 

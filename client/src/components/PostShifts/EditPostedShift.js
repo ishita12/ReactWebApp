@@ -473,14 +473,48 @@ this.setState({postShiftForm: updatedPostShiftForm});
     console.log('lets compare the dates   '+dd +'        '+today);
 
 
-    if(dd <= today) {
+    if(dd < today) {
 
     errors.passedDate = "This date has already passed. You cannot edit this shift";
     this.setState({errors: errors});
   //  this.props.history.push('/postShifts');
     console.log('line 28   '+dd);
     }
-else {
+    if(dd === today) {
+
+console.log('yes today date matching    ');
+      const updatedPostShiftForm = {
+      ...this.state.postShiftForm
+      };
+      let updatedFormElement = {};
+      if(this.state.postShiftForm.hall){
+       updatedFormElement = {
+        ...updatedPostShiftForm['hall']
+      };
+      updatedFormElement.value = shiftPosted.hall;
+      updatedPostShiftForm['hall'] = updatedFormElement;
+      this.setState({postShiftForm: updatedPostShiftForm});
+      }
+      if(this.state.postShiftForm.shiftDate){
+       updatedFormElement = {
+        ...updatedPostShiftForm['hall']
+      };
+      updatedFormElement.disabled = true;
+      updatedPostShiftForm['shiftDate'] = updatedFormElement;
+      this.setState({postShiftForm: updatedPostShiftForm});
+      }
+      if(this.state.postShiftForm.shiftType){
+       updatedFormElement = {
+        ...updatedPostShiftForm['shiftType']
+      };
+      updatedFormElement.disabled = true;
+      updatedPostShiftForm['shiftType'] = updatedFormElement;
+      this.setState({postShiftForm: updatedPostShiftForm});
+      }
+
+
+    }
+if(dd > today) {
 
 
   console.log('line 216   '+shiftPosted.shiftDate+'   '+shiftPosted.hall+ '   '+shiftPosted.timeIn+ '    '+shiftPosted.timeOut+'   '+shiftPosted.shiftType);
