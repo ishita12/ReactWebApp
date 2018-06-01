@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Moment from 'react-moment';
+import SelectListGroup from '../commons/SelectListGroup';
 import { connect } from 'react-redux';
 import { Route, Redirect, Link } from 'react-router-dom';
 import * as actions from '../../actions/proctorActions';
@@ -18,7 +19,15 @@ this.state = {
   idArray: [],
   droppedIdArray: [],
   test: false,
-  redirectVal: false
+  redirectVal: false,
+  show: false,
+  filterHall: 'all stations',
+  filterType: 'all types',
+  val1: false,
+  val2: false,
+  val3: false,
+  val4: false,
+  filteredShifts: []
 }
 console.log('inside viewPostedShifts component');
 this.props.getDroppedShiftIdsByLoggedInUser(this.props.auth.user.id);
@@ -33,6 +42,8 @@ setTimeout(function() {this.props.getClaimedShiftIds(); }.bind(this), 3000);
 setTimeout(function() {this.testing(); }.bind(this), 2000);
 
 this.onSubmit = this.onSubmit.bind(this);
+this.onChange = this.onChange.bind(this);
+  this.toggle = this.toggle.bind(this);
 
 }
 
@@ -46,7 +57,11 @@ setTimeout(function() {this.set(ids); }.bind(this), 1000);
 }
 
 
-
+toggle(e) {
+  const val= this.state.show;
+  this.setState({show: !val});
+  console.log('the value of show is     '+this.state.show);
+}
 
 testing(){
   console.log('2');
@@ -140,8 +155,156 @@ setTimeout(function() {this.getIds(); }.bind(this), 1000);
 
 }
 
+
+onChange(e) {
+  this.setState({[e.target.name]: e.target.value});
+
+}
+
+
+checkVal2(hall, type) {
+  console.log('val2 value is     '+this.state.val2);
+   const { shifts } = this.props.shiftsView;
+
+   const filteredShifts = [];
+
+let count=0;
+let testttt=   shifts.map(function(shift) {
+     if(shift.hall === hall && shift.shiftType === type) {
+      count++;
+       console.log('halllllllllll                    '+count);
+       filteredShifts.push(shift);
+     }
+
+   });
+this.setFilteredList(filteredShifts);
+
+}
+
+checkVal3(type) {
+  console.log('val2 value is     '+this.state.val2);
+   const { shifts } = this.props.shiftsView;
+
+   const filteredShifts = [];
+
+let count=0;
+let testttt=   shifts.map(function(shift) {
+     if(shift.shiftType === type) {
+      count++;
+       console.log('halllllllllll                    '+count);
+       filteredShifts.push(shift);
+     }
+
+   });
+this.setFilteredList3(filteredShifts);
+
+}
+
+checkVal4(hall) {
+  console.log('val2 value is     '+this.state.val2);
+   const { shifts } = this.props.shiftsView;
+
+   const filteredShifts = [];
+
+let count=0;
+let testttt=   shifts.map(function(shift) {
+     if(shift.hall === hall) {
+      count++;
+       console.log('halllllllllll                    '+count);
+       filteredShifts.push(shift);
+     }
+
+   });
+this.setFilteredList4(filteredShifts);
+
+}
+
+setFilteredList(filteredShifts) {
+  this.setState({filteredShifts: filteredShifts, val2: true, val1: false, val3: false, val4: false});
+
+}
+setFilteredList3(filteredShifts) {
+  this.setState({filteredShifts: filteredShifts, val3: true, val1: false, val2: false, val4: false});
+
+}
+setFilteredList4(filteredShifts) {
+  this.setState({filteredShifts: filteredShifts, val4: true, val1: false, val2: false, val3: false});
+
+}
+setVal1() {
+  this.setState({val1: true, val2: false, val3: false, val4: false});
+}
+
+setVal2(hall, type) {
+
+
+  this.checkVal2(hall, type);
+}
+
+setVal3(type) {
+
+
+
+  this.checkVal3(type);
+}
+
+setVal4(hall) {
+
+  this.checkVal4(hall);
+}
+
+
+
+
 onSubmit(e) {
   e.preventDefault();
+
+const filterParam = {
+
+hall: this.state.filterHall,
+shiftType: this.state.filterType
+}
+
+
+console.log('the filter params are    '+this.state.filterHall+'      '+this.state.filterType);
+
+if(filterParam.hall==='all stations' && filterParam.shiftType==='all types') {
+  console.log('the filter params are    '+filterParam.hall+'      '+filterParam.shiftType);
+
+   this.setVal1();
+
+
+}
+
+if(filterParam.hall !== 'all stations' && filterParam.shiftType !== 'all types') {
+
+  console.log('the filter params are    '+filterParam.hall+'      '+filterParam.shiftType);
+
+   this.setVal2(filterParam.hall, filterParam.shiftType);
+
+}
+
+
+
+if(filterParam.hall !== 'all stations' && filterParam.shiftType === 'all types') {
+  console.log('the filter params are    '+filterParam.hall+'      '+filterParam.shiftType);
+
+this.setVal4(filterParam.hall);
+
+}
+
+
+if(filterParam.hall === 'all stations' && filterParam.shiftType !== 'all types') {
+  console.log('the filter params are    '+filterParam.hall+'      '+filterParam.shiftType);
+
+
+  this.setVal3(filterParam.shiftType);
+
+}
+
+
+
+
 
 }
 
@@ -290,7 +453,56 @@ reclaimShift(shift) {
 
 
   render () {
+    let showForm = null;
+    const shiftTypeOptions = [
+          {label: 'all types', value: 'all types'},
+          { label: 'A', value: 'A' },
+          { label: 'B', value: 'B' },
+          { label: 'C1', value: 'C1' },
+          { label: 'C2', value: 'C2' },
+          { label: 'D', value: 'D' }
+        ];
+
+        const shiftHallOptions =    [{label: 'all stations', value: 'all stations'},
+                      {label: '337 Huntington', value: '337 Huntington'},
+                       {label: 'Northwest', value: 'Northwest'},
+                       {label: 'Melvin Hall', value: 'Melvin Hall'},
+                       {label: 'Kerr Hall', value: 'Kerr Hall'},
+                       {label: 'Light Hall', value: 'Light Hall'},
+                       {label: 'Rubenstein Hall', value: 'Rubenstein Hall'},
+                       {label: 'Burstein Hall', value: 'Burstein Hall'},
+                       {label: 'Stetson Hall', value: 'Stetson Hall'}
+                     ];
+
+                     if(this.state.show) {
+
+showForm = (
+
+<div>
+  <h2>Station:</h2><SelectListGroup
+                   placeholder="Hall"
+                   name="filterHall"
+                   value={this.state.filterHall}
+                   onChange={this.onChange}
+                   options={shiftHallOptions}
+                 />
+  <h2>Shift Type</h2>               <SelectListGroup
+                                  placeholder="shiftType"
+                                  name="filterType"
+                                  value={this.state.filterType}
+                                  onChange={this.onChange}
+                                  options={shiftTypeOptions}
+                                />
+    <input type="submit" value="Apply changes"  className="btn btn-info btn-block mt-4"    />
+</div>
+);
+
+                     }
+
 console.log('5');
+console.log('the value of val1 is    '+this.state.val1);
+
+ const { shifts } = this.props.shiftsView;
 const {redirect} = this.state;
 const {redirectVal} = this.state;
 const {shift} = this.state;
@@ -320,7 +532,7 @@ if(redirectVal) {
 }
 
 
-  const { shifts } = this.props.shiftsView;
+
   const { errors } = this.state;
   console.log('line 42   '+typeof shifts);
 
@@ -342,20 +554,45 @@ for(var i in aa){
  console.log('$$$$      '+Object.values(Object.values(this.state.droppedIdArray[i])).indexOf('5b0ac7ef091f5c372047c34d'));
 }
 
-    let shiftsPosted = Object.values(shifts).map(shift => (
+  let shiftsPosted = null;
+if(!this.state.show || (this.state.show && this.state.val1)) {
+ shiftsPosted = Object.values(shifts).map(shift => (
 
-    <tr key={shift._id}>
-    <td> <Moment format="YYYY/MM/DD">{shift.shiftDate}</Moment></td>
-    <td>{shift.hall}</td>
-    <td>{shift.shiftType}</td>
-    <td>{shift.timeIn}</td>
-    <td>{shift.timeOut}</td>
-    <td>{shift.hours}</td>
-     {  JSON.stringify(this.state.droppedIdArray).indexOf(shift._id) > -1 ? (<td><button onClick={this.reclaimShift.bind(this, shift)} className="btn btn-warning">Reclaim   </button></td>) : (<td><button onClick={this.claimShift.bind(this, shift)} className="btn btn-info">Claim Shift</button></td>)}
+  <tr key={shift._id}>
+  <td> <Moment format="YYYY/MM/DD">{shift.shiftDate}</Moment></td>
+  <td>{shift.hall}</td>
+  <td>{shift.shiftType}</td>
+  <td>{shift.timeIn}</td>
+  <td>{shift.timeOut}</td>
+  <td>{shift.hours}</td>
+   {  JSON.stringify(this.state.droppedIdArray).indexOf(shift._id) > -1 ? (<td><button onClick={this.reclaimShift.bind(this, shift)} className="btn btn-warning">Reclaim   </button></td>) : (<td><button onClick={this.claimShift.bind(this, shift)} className="btn btn-info">Claim Shift</button></td>)}
 
-    </tr>
+  </tr>
 
-    ));
+  ));
+}
+
+if(this.state.show && this.state.val2 || this.state.val3 || this.state.val4) {
+
+
+shiftsPosted = Object.values(this.state.filteredShifts).map(shift => (
+
+ <tr key={shift._id}>
+ <td> <Moment format="YYYY/MM/DD">{shift.shiftDate}</Moment></td>
+ <td>{shift.hall}</td>
+ <td>{shift.shiftType}</td>
+ <td>{shift.timeIn}</td>
+ <td>{shift.timeOut}</td>
+ <td>{shift.hours}</td>
+  {  JSON.stringify(this.state.droppedIdArray).indexOf(shift._id) > -1 ? (<td><button onClick={this.reclaimShift.bind(this, shift)} className="btn btn-warning">Reclaim   </button></td>) : (<td><button onClick={this.claimShift.bind(this, shift)} className="btn btn-info">Claim Shift</button></td>)}
+
+ </tr>
+
+ ));
+
+
+}
+
 
 
 
@@ -384,6 +621,16 @@ for(var i in aa){
 
 </thead>
 </table>
+
+
+
+<button type="button" className="btn btn-info  mt-4" onClick={this.toggle}>Apply Shifts Filters</button>
+  <form onSubmit={this.onSubmit}>
+
+  {showForm}
+
+
+  </form>
 
 
 
@@ -420,7 +667,8 @@ const mapDispatchToProps = dispatch => {
     claimUserShift: (shift, userID, history) => dispatch(actions.claimUserShift(shift, userID, history)),
     getClaimedShiftIds: () => dispatch(actions.getClaimedShiftIds()),
     allShifts: () => dispatch(actions.allShifts()),
-    getDroppedShiftIdsByLoggedInUser: (uid) => dispatch(actions.getDroppedShiftIdsByLoggedInUser(uid))
+    getDroppedShiftIdsByLoggedInUser: (uid) => dispatch(actions.getDroppedShiftIdsByLoggedInUser(uid)),
+    getVal2: (hall, type, shifts) => dispatch(actions.getVal2(hall, type, shifts))
     }
 
 }

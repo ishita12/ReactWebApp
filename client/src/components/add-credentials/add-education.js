@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import  Input  from '../commons/Input';
-import SelectField from '../commons/Select';
+
 import * as eduActions from '../../actions/profileActions';
 
 class  AddEducation extends Component {

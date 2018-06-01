@@ -560,6 +560,50 @@ DroppedShifts.find({user: req.params.uid})
 
 
 
+// // @route Get api/proctor
+// @desc Get filtered shifts for selected hall and type
+// @access Private
+
+router.get('/getVal2/:hall/:type', passport.authenticate('jwt', { session: false }), (req, res) => {
+const errors = {};
+//console.log('loggedin user id is   '+req.user.id);
+console.log('inside getVal2 route      '+req.params.hall+'         '+req.params.type+'         '+req.user.id);
+
+console.log(' the shifts before filter are      '+req.body.shifts);
+
+
+/*
+PostShift.findOne({shiftDate: req.params.shiftDate, shiftType: req.params.shiftType})
+.then(shifts => {
+  if(!shifts) {
+  console.log('yes you can claim this shift yayyyy   ');
+  res.json({success: true});
+} if(shifts) {
+   console.log('You cannot claim any other shift on this date and time as you already have a shift scheduled for this timing that has not been picked up yet.     '+shifts);
+    errors.cannotClaimShift = 'You have dropped a shift at this schedule which has not been claimed yet. Try later';
+    res.status(404).json(errors);
+  }
+}).catch(err => {
+  res.status(404).json({claimshift: 'There are no shifts that have been claimed'});
+});
+
+*/
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -124,7 +124,7 @@ this.props.deleteShiftFromDroppedList(shiftData.sid);
 
     Go Back
     </Link>
-    <h1 className="display-4 text-center"> Claim Shift</h1>
+    <h1 className="display-4 text-center"> Re-Claim Shift</h1>
 
     <form onSubmit={this.onSubmit}>
     <h6>Date </h6>

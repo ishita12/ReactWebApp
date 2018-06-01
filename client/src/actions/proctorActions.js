@@ -87,6 +87,31 @@ dispatch({
 }
 
 
+// get filtered shifts for selected station and shifttype
+
+
+export const getVal2 = (hall, type, shifts) => dispatch => {
+  console.log('Inside getVal2 action     '+ hall+'         '+type);
+  console.log('Inside getVal2 action     '+shifts);
+  axios.get(`/api/proctor/getVal2/${hall}/${type}`, shifts)
+  .then(res => {
+    console.log('inside getVal2 then');
+  dispatch({
+    type: actionTypes.GET_VAL2_SHIFTS,
+    payload: res.data
+  })
+  }).catch(err => {
+    console.log('inside error');
+    dispatch({
+      type: actionTypes.GET_ERRORS,
+      payload: err.response.data
+    })
+  })
+
+
+
+}
+
 
 
 
