@@ -8,7 +8,7 @@ const DroppedShifts = require('../../models/DroppedShifts');
 const validatePostShiftInput = require('../../validation/PostShift');
 const ProctorClaimShift = require('../../models/ProctorShift');
 const validateClaimShift = require('../../validation/validateClaimShift');
-
+const nodemailer = require('nodemailer');
 // @route Get api/proctor
 // @desc Get all posted shifts
 // @access Private
@@ -49,11 +49,67 @@ PostShift.find({_id: {$nin: ids}})
 
 
 
+
+
+
 // @route Get api/proctor
 // @desc claim shift
 // @access Private
 
-router.post('/claimShift/:userID', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/reclaimShift/:userID', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+
+
+
+  const userEmail = req.user.email;
+  console.log('user email is    '+userEmail);
+
+
+
+  const output =
+  `
+  <h2>You have Re- claimed your shift </h2>
+  <h2>Shift Details </h2>
+
+  <ul>
+  <li>Shift Date: ${req.body.shiftDate}</li>
+  <li>Station: ${req.body.hall}</li>
+  <li>Type: ${req.body.shiftType}</li>
+  <li>Time In: ${req.body.timeIn}</li>
+  <li>Time Out: ${req.body.timeOut}</li>
+  <li>Hours: ${req.body.hours}</li>
+
+
+
+  </ul>
+  `;
+
+  // create transporter
+  var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'residentialsafetyoffice@gmail.com',
+    pass: 'Rso@2018'
+  }
+  });
+
+
+
+  // setup email data with unicode symbols
+    let mailOptions = {
+        from: 'residentialsafetyoffice@gmail.com', // sender address
+        to: userEmail, // list of receivers
+        subject: 'Shift Re-Claimed ✔', // Subject line
+
+        html: output // html body
+    };
+
+
+
+
+
+
+
 
 
 const userId = req.params.userID;
@@ -104,6 +160,22 @@ console.log('first shift   ');
 
 
 
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+          }
+          console.log('Message sent: %s', info.messageId);
+          // Preview only available when sending through an Ethereal account
+          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+          // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+          // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+      });
+
+
+
+
   newClaimShift.save().then(shifts => {
      console.log('shift claimed    ');
     res.json(shifts);
@@ -142,6 +214,20 @@ console.log('sh2 ssssssss         '+sh2);
 console.log('total hours are   '+totalHours);
 if(totalHours === 4.00 && newClaimShift.hours === 4.00) {
 
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          return console.log(error);
+      }
+      console.log('Message sent: %s', info.messageId);
+      // Preview only available when sending through an Ethereal account
+      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+  });
+
+
+
+
   newClaimShift.save().then(shifts => {
      console.log(' new shift added    ');
     res.json(shifts);
@@ -167,6 +253,274 @@ if(totalHours > 4.00) {
 
 if(sh2.shiftDate === undefined && totalHours === 0) {
 console.log('hello   ishita');
+
+// send mail with defined transport object
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        return console.log(error);
+    }
+    console.log('Message sent: %s', info.messageId);
+    // Preview only available when sending through an Ethereal account
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+});
+
+
+
+  newClaimShift.save().then(shifts => {
+     console.log('No other shift has been claimed for this user on this date    '+shifts.id);
+    res.json(shifts);
+  }).catch(err => {
+    errors.e2=err;
+    res.status(404).json(errors);
+  });
+
+}
+
+})
+
+}
+
+})
+
+}
+
+});
+}
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// @route Get api/proctor
+// @desc claim shift
+// @access Private
+
+router.post('/claimShift/:userID', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+
+
+
+  const userEmail = req.user.email;
+  console.log('user email is    '+userEmail);
+
+
+
+  const output =
+  `
+  <h2>You have claimed a shift </h2>
+  <h2>Shift Details </h2>
+
+  <ul>
+  <li>Shift Date: ${req.body.shiftDate}</li>
+  <li>Station: ${req.body.hall}</li>
+  <li>Type: ${req.body.shiftType}</li>
+  <li>Time In: ${req.body.timeIn}</li>
+  <li>Time Out: ${req.body.timeOut}</li>
+  <li>Hours: ${req.body.hours}</li>
+
+
+
+  </ul>
+  `;
+
+  // create transporter
+  var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'residentialsafetyoffice@gmail.com',
+    pass: 'Rso@2018'
+  }
+  });
+
+
+
+  // setup email data with unicode symbols
+    let mailOptions = {
+        from: 'residentialsafetyoffice@gmail.com', // sender address
+        to: userEmail, // list of receivers
+        subject: 'Shift Claimed ✔', // Subject line
+
+        html: output // html body
+    };
+
+
+
+
+
+
+
+
+
+const userId = req.params.userID;
+
+console.log('inside route  claim shift   '+'        ' + '    '+req.params.userID+'       '+Object.values(req.body)[2]);
+const { errors, isValid } = validateClaimShift(req.body);
+if(!isValid) {
+  console.log('errors present');
+  return res.status(400).json(errors);
+}
+
+
+const dateToday = new Date(Date.now());
+console.log('todays date is   '+dateToday);
+
+const dateSelected = new Date(req.body.shiftDate);
+console.log('date selected    '+dateSelected);
+
+console.log('line 75 in route    '+new Date(dateSelected) >= new Date(dateToday));
+if(dateToday > dateSelected) {
+  console.log('the date has paased   ');
+  errors.passedDate='This date has already passed. You cannot claim this shift now';
+  res.status(404).json(errors);
+}
+
+
+else {
+console.log('sid is   '+Object.values(req.body.sid));
+const newClaimShift = new ProctorClaimShift({
+user: req.params.userID,
+sid: req.body.sid,
+hall: req.body.hall,
+shiftDate: req.body.shiftDate,
+shiftType: req.body.shiftType,
+timeIn: req.body.timeIn,
+timeOut: req.body.timeOut,
+hours: req.body.hours
+
+});
+
+ProctorClaimShift.findOne({user: req.params.userID}, (err, newShifts) => {
+
+console.log('the logged in user   '+req.user.name);
+console.log('the shift to be added is   '+newClaimShift);
+console.log('already present shifts are   '+newShifts);
+if(!newShifts) {
+console.log('first shift   ');
+
+
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return console.log(error);
+          }
+          console.log('Message sent: %s', info.messageId);
+          // Preview only available when sending through an Ethereal account
+          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+          // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+          // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+      });
+
+
+
+
+  newClaimShift.save().then(shifts => {
+     console.log('shift claimed    ');
+    res.json(shifts);
+  }).catch(err => {
+  errors.e1 = err;
+    res.status(404).json(errors);
+  });
+
+}
+
+
+
+if(newShifts) {
+  console.log('this user has claimed some shifts !!!!  ');
+ProctorClaimShift.findOne({user: req.params.userID, shiftDate: req.body.shiftDate, shiftType: req.body.shiftType}, (err, sh1) => {
+
+if(sh1) {
+console.log('cannot claim another shift on the same date and time');
+errors.noclaim='You have already claimed a shift on the same date and time';
+res.status(404).json(errors);
+
+} else {
+
+ProctorClaimShift.find({user: req.params.userID, shiftDate: req.body.shiftDate}, (err, sh2) => {
+let totalHours = 0;
+
+
+if(sh2) {
+
+for(var i in sh2) {
+  console.log('individual hours are   '+sh2[i].hours);
+  totalHours = totalHours + sh2[i].hours;
+}
+
+console.log('sh2 ssssssss         '+sh2);
+console.log('total hours are   '+totalHours);
+if(totalHours === 4.00 && newClaimShift.hours === 4.00) {
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          return console.log(error);
+      }
+      console.log('Message sent: %s', info.messageId);
+      // Preview only available when sending through an Ethereal account
+      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+  });
+
+
+
+
+  newClaimShift.save().then(shifts => {
+     console.log(' new shift added    ');
+    res.json(shifts);
+  }).catch(err => {
+    errors.e3=err;
+    console.log('There is some error   ');
+
+    res.status(404).json(errors);
+  });
+
+} if(totalHours > 4.00 && newClaimShift.hours >4.00 ) {
+  errors.cannotClaim="The hour limit is exceeding. Cannot claim this shift"
+  res.status(404).json(errors);
+}
+if(totalHours > 4.00) {
+  console.log('Todays hours limit has been met. You cannot claim any more shifts  ');
+  errors.limit = 'Todays hours limit has been met. You cannot claim any more shifts';
+   res.status(404).json(errors);
+}
+
+
+}
+
+if(sh2.shiftDate === undefined && totalHours === 0) {
+console.log('hello   ishita');
+
+// send mail with defined transport object
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        return console.log(error);
+    }
+    console.log('Message sent: %s', info.messageId);
+    // Preview only available when sending through an Ethereal account
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+});
+
+
+
   newClaimShift.save().then(shifts => {
      console.log('No other shift has been claimed for this user on this date    '+shifts.id);
     res.json(shifts);
@@ -225,6 +579,49 @@ console.log('in route   deleteShiftFromDroppedList            shift id ->  '+req
 
 
 router.post('/dropShift/:userID', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+  const userEmail = req.user.email;
+  console.log('user email is    '+userEmail);
+
+  const output =
+  `
+  <h2>You have dropped a shift </h2>
+  <h2>Shift Details </h2>
+
+  <ul>
+  <li>Shift Date: ${req.body.shiftDate}</li>
+  <li>Station: ${req.body.hall}</li>
+  <li>Type: ${req.body.shiftType}</li>
+  <li>Time In: ${req.body.timeIn}</li>
+  <li>Time Out: ${req.body.timeOut}</li>
+  <li>Hours: ${req.body.hours}</li>
+
+
+
+  </ul>
+  `;
+
+  // create transporter
+  var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'residentialsafetyoffice@gmail.com',
+    pass: 'Rso@2018'
+  }
+  });
+
+
+
+  // setup email data with unicode symbols
+    let mailOptions = {
+        from: 'residentialsafetyoffice@gmail.com', // sender address
+        to: userEmail, // list of receivers
+        subject: 'Shift Dropped ', // Subject line
+
+        html: output // html body
+    };
+
+
 
 
 const userId = req.params.userID;
@@ -285,6 +682,8 @@ console.log('the shift start time is  '+start);
    if(currentDate.getHours()+3 < start) {
      console.log('The selected shift starts more than 3 hours from now so you can drop it');
 
+
+
      ProctorClaimShift.deleteOne({sid: req.body.sid}, (err, dshift1) => {
        if(err) {
          res.status(err).json(errors);
@@ -294,6 +693,18 @@ console.log('the shift start time is  '+start);
             errors.notFound = "Shift not found";
             res.status(404).json(errors);
           } else {
+
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return console.log(error);
+                }
+                console.log('Message sent: %s', info.messageId);
+                // Preview only available when sending through an Ethereal account
+                console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+            });
+
+
 
 
             res.json(dropShift);
@@ -318,6 +729,10 @@ else {
     console.log('not equal');
    // can drop
 
+
+
+
+
    ProctorClaimShift.deleteOne({sid: req.body.sid}, (err, dshift1) => {
      if(err) {
        res.status(err).json(errors);
@@ -327,6 +742,18 @@ else {
           errors.notFound = "Shift not found";
           res.status(404).json(errors);
         } else {
+
+          // send mail with defined transport object
+          transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                  return console.log(error);
+              }
+              console.log('Message sent: %s', info.messageId);
+              // Preview only available when sending through an Ethereal account
+              console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+          });
+
+
 
           res.json(dropShift);
 

@@ -121,6 +121,7 @@ export const claimUserShift = (shift, userID, history) => dispatch => {
 console.log('inside claimUserShift action   ');
 
 const shiftData = {
+user: shift.user,
 sid: shift.sid,
 hall: shift.hall,
 shiftDate: shift.shiftDate,
@@ -150,6 +151,58 @@ dispatch({
 })
 })
 }
+
+
+
+
+
+
+// claim user shift
+export const reclaimUserShift = (shift, userID, history) => dispatch => {
+
+console.log('inside claimUserShift action   ');
+
+const shiftData = {
+user: shift.user,
+sid: shift.sid,
+hall: shift.hall,
+shiftDate: shift.shiftDate,
+shiftType: shift.shiftType,
+ timeIn: shift.timeIn,
+ timeOut: shift.timeOut,
+ hours: shift.hours
+
+}
+
+axios.post('/api/proctor/reclaimShift/'+ userID, shiftData)
+.then(res => {
+
+  dispatch({
+  type: actionTypes.GET_UPDATED_SHIFTS,
+  payload: res.data
+
+  })
+
+history.push('/dashboard')
+
+}).catch(err => {
+console.log('inside error  ');
+dispatch({
+  type: actionTypes.GET_ERRORS,
+  payload: err.response.data
+})
+})
+}
+
+
+
+
+
+
+
+
+
+
 
 // get claimed shift ids
 

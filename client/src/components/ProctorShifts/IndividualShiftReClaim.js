@@ -98,7 +98,7 @@ class IndividualShiftReClaim extends Component {
 
 this.props.deleteShiftFromDroppedList(shiftData.sid);
 
-   setTimeout(function() {this.props.claimUserShift(shiftData, this.state.user, this.props.history);}.bind(this), 2000);
+   setTimeout(function() {this.props.reclaimUserShift(shiftData, this.state.user, this.props.history);}.bind(this), 2000);
 
 
 
@@ -231,6 +231,7 @@ const mapDispatchToProps = dispatch => {
   return {
 
     claimUserShift: (shift, userID, history) => dispatch(actions.claimUserShift(shift, userID, history)),
+      reclaimUserShift: (shift, userID, history) => dispatch(actions.reclaimUserShift(shift, userID, history)),
     deleteShiftFromDroppedList: (sid) => dispatch(actions.deleteShiftFromDroppedList(sid))
     }
 

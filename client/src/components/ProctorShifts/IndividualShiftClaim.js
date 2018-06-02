@@ -7,6 +7,7 @@ import * as actions from '../../actions/proctorActions';
 import { Route, Redirect, withRouter } from 'react-router-dom';
 import Input from '../commons/Input';
 
+
 class IndividualShiftClaim extends Component {
 
 constructor(props) {
@@ -114,13 +115,16 @@ this.props.checkForSelectedDateAndType(shiftData.shiftDate, shiftData.shiftType)
 
 checkres(shiftData) {
 
-
   const {successVal} = this.props.shiftsView;
   console.log('the value of success is    '+successVal.success);
 
   if(successVal){
 
     this.props.claimUserShift(shiftData, this.state.user, this.props.history);
+
+
+
+
   }
   else {
     const errors = {};
