@@ -1241,8 +1241,12 @@ DroppedShifts.findOne({sid: req.params.sid})
   if(!user) {
   console.log('nooo  user present ');
 } if(user) {
-   console.log(' yess     '+user);
+   console.log(' yess   line 1244  '+user);
+
+
   res.json({user});
+
+
   }
 }).catch(err => {
   res.status(404).json({claimshift: 'There are no shifts that have been claimed'});
@@ -1275,11 +1279,11 @@ DroppedShifts.findOne({sid: req.params.sid, user: {$ne: user}})
 .then(shift => {
   if(!shift) {
   console.log('nooo   ');
-  res.json({successDropOrNot: false});
+res.json({successDropOrNot: 0});
 
 } if(shift) {
    console.log(' yess     '+shift);
-  res.json({ success: true});
+  res.json({ successDropOrNot: 1});
   }
 }).catch(err => {
   res.status(404).json({claimshift: 'There are no shifts that have been claimed'});

@@ -17,6 +17,7 @@ const initialState = {
   checkDroppedShift: {},
   checkStatus: {},
   successDropOrNot: false,
+  successDropOrNot2: false,
   user: '',
   name: '',
   email: '',

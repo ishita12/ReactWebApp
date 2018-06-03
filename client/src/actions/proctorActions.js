@@ -64,7 +64,23 @@ export const checkForSelectedDateAndType = (shiftDate, shiftType) => dispatch =>
 }
 
 
+// delete dropper user
 
+
+export const deleteDropperUser = (sid) => dispatch => {
+console.log('delete dropper user action    '+sid);
+
+axios.delete(`/api/proctor/deleteShiftFromDroppedList/${sid}`)
+.then(res => {
+
+}).catch(err => {
+  dispatch({
+    type: actionTypes.GET_ERRORS,
+    payload: err.response.data
+  })
+})
+
+}
 
 
 
@@ -77,7 +93,7 @@ export const checkStatus = (sid) => dispatch => {
 
    axios.get(`/api/proctor/checkStatus/${sid}`)
    .then(res => {
-     console.log('inside checkForSelectedDateAndType then');
+     console.log('inside checkStatus then');
    dispatch({
      type: actionTypes.GET_DROPPED_STATUS,
      payload: res.data

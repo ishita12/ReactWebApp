@@ -109,18 +109,32 @@ this.props.checkForSelectedDateAndType(shiftData.shiftDate, shiftData.shiftType)
 
 
 
-  setTimeout(function() {   this.props.checkStatus(shiftData.sid); }.bind(this), 1000);
+
+  setTimeout(function() {this.checkstatusIf(shiftData); }.bind(this), 2000);
 
 
 
-
-  setTimeout(function() {this.checkres(); }.bind(this), 2000);
 
 
 
 
 }
 
+
+checkstatusIf(shiftData){
+     this.props.checkStatus(shiftData.sid);
+
+
+         setTimeout(function() { this.checkIfShiftAvailable(); }.bind(this), 2000);
+
+}
+
+
+
+
+checkIfShiftAvailable(){
+    setTimeout(function() {this.checkres(); }.bind(this), 2000);
+}
 
 
 checkres() {
@@ -129,19 +143,22 @@ checkres() {
   const {successVal} = this.props.shiftsView;
   const {user}=this.props.shiftsView;
   const {successDropOrNot} = this.props.shiftsView;
+
 let shiftData = {};
 console.log('THE VALUE OF SUCCESS AND successVal  IS    success    '+Object.values(successDropOrNot)+'        successVal        '+Object.values(successVal));
 
 const val = Object.values(successDropOrNot);
-console.log('the values of val is       =>      '+val);
-if(val === true) {
-  const test = true;
+
+let test = null;
+console.log('the values of val is       =>      '+val+'          '+typeof parseInt(successDropOrNot)+'         '+typeof parseInt(val))
+if(parseInt(val) === 1) {
+  test = 1;
   console.log('yes');
-} else {
+} if(parseInt(val) === 0) {
   console.log('no');
-  const test = false;
+   test = 0;
 }
- if(val) {
+ if(test === 1) {
     console.log('the status is    '+ val+ '           '+this.state.user);
       shiftData = {
 
@@ -158,7 +175,7 @@ if(val === true) {
      }
 
    }
-   else {
+   if(test === 0) {
      console.log('the status is    '+ val);
       shiftData = {
 
@@ -181,19 +198,19 @@ if(val === true) {
 
 if(successVal){
 
-  if(val){
+  if(test === 1){
     console.log('the shift was dropped by    '+Object.values(user));
     const droppedbyid = Object.values(user);
 
-
+   //this.props.deleteFromDroppedList(shiftData.)
   this.props.getIdForUser(shiftData.sid);
 
+      setTimeout(function() {this.deleteDropper(shiftData);}.bind(this), 1000);
 
-      setTimeout(function() {this.getUserId(shiftData);}.bind(this), 1000);
 
   }
 
-else {
+if(test === 0) {
   console.log('The shift was not dropped by anyone right now              '+shiftData.hall+'     '+shiftData.status);
 
     setTimeout(function() {this.props.claimTheShift(shiftData, userid, this.props.history);}.bind(this), 1000);
@@ -212,6 +229,16 @@ else {
 
 }
 
+
+deleteDropper(shiftData){
+
+console.log('inside delete dropper user   method     '+shiftData.sid );
+
+this.props.deleteDropperUser(shiftData.sid);
+    setTimeout(function() {this.getUserId(shiftData);}.bind(this), 1000);
+
+
+}
 
 
 getUserId(shiftData){
@@ -357,7 +384,8 @@ const mapDispatchToProps = dispatch => {
     checkStatus: (sid) => dispatch(actions.checkStatus(sid)),
     getUserName: (user) => dispatch(actions.getUserName(user)),
     claimTheShift: (shift, user, history) => dispatch(actions.claimTheShift(shift, user, history)),
-    getIdForUser: (sid) => dispatch(actions.getIdForUser(sid))
+    getIdForUser: (sid) => dispatch(actions.getIdForUser(sid)),
+    deleteDropperUser: (sid) => dispatch(actions.deleteDropperUser(sid))
     }
 
 }
