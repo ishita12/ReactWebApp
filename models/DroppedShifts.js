@@ -34,6 +34,9 @@ const DroppedSchema = new Schema({
   hours: {
     type: Number,
     required: true
+  },
+  status: {
+    type: String
   }
 
 });

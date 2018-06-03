@@ -11,8 +11,16 @@ const initialState = {
   claimedIds: {},
   allShifts: {},
   successVal: false,
+  successVal2: false,
+  successVal3: false,
   droppedIds: {},
-  checkDroppedShift: {}
+  checkDroppedShift: {},
+  checkStatus: {},
+  successDropOrNot: false,
+  user: '',
+  name: '',
+  email: '',
+  userid: ''
 }
 
 
@@ -74,6 +82,28 @@ case actionTypes.GET_DROPPED_SHIFT_STATUS:
     ...state,
     checkDroppedShift: action.payload,
     successVal: action.payload
+  }
+
+case actionTypes.GET_DROPPED_STATUS:
+ return {
+   ...state,
+   checkStatus: action.payload,
+   user: action.payload,
+   successDropOrNot: action.payload
+
+ }
+
+case actionTypes.GET_USER_NAME:
+  return {
+    ...state,
+    name: action.payload,
+    email: action.payload
+  }
+
+case actionTypes.GET_DROPPED_USERID:
+  return {
+    ...state,
+    userid: action.payload
   }
 
   default:

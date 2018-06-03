@@ -90,7 +90,8 @@ class IndividualShiftReClaim extends Component {
   shiftType: this.state.shiftType,
   timeIn: this.state.timeIn,
   timeOut: this.state.timeOut,
-  hours: this.state.hours
+  hours: this.state.hours,
+  status: 'reclaim'
 
   }
 

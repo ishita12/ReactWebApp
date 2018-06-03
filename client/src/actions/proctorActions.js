@@ -66,6 +66,66 @@ export const checkForSelectedDateAndType = (shiftDate, shiftType) => dispatch =>
 
 
 
+
+
+// checkStatus
+
+
+export const checkStatus = (sid) => dispatch => {
+
+ console.log('checkStatus   action   '+ sid);
+
+   axios.get(`/api/proctor/checkStatus/${sid}`)
+   .then(res => {
+     console.log('inside checkForSelectedDateAndType then');
+   dispatch({
+     type: actionTypes.GET_DROPPED_STATUS,
+     payload: res.data
+   })
+   }).catch(err => {
+     console.log('inside error');
+     dispatch({
+       type: actionTypes.GET_ERRORS,
+       payload: err.response.data
+     })
+   })
+
+
+}
+
+
+
+
+// get id for user
+
+
+export const getIdForUser = (sid) => dispatch => {
+
+ console.log('getIdForUser   action   '+ sid);
+
+   axios.get(`/api/proctor/getIdForUser/${sid}`)
+   .then(res => {
+     console.log('inside getIdForUser then');
+   dispatch({
+     type: actionTypes.GET_DROPPED_USERID,
+     payload: res.data
+   })
+   }).catch(err => {
+     console.log('inside error');
+     dispatch({
+       type: actionTypes.GET_ERRORS,
+       payload: err.response.data
+     })
+   })
+
+
+}
+
+
+
+
+
+
 // dispatch action for deleting the shift from all shifts list which has been claimed
 
 export const deleteShiftFromDroppedList = (sd) => dispatch => {
@@ -112,13 +172,32 @@ export const getVal2 = (hall, type, shifts) => dispatch => {
 
 }
 
+export const getUserName = (user) => dispatch => {
+console.log('inside getUserName action   '+user);
 
+axios.get(`/api/proctor/getUserName/${user}`)
+.then(res => {
+  console.log('inside getUserName then');
+dispatch({
+  type: actionTypes.GET_USER_NAME,
+  payload: res.data
+})
+}).catch(err => {
+  console.log('inside error');
+  dispatch({
+    type: actionTypes.GET_ERRORS,
+    payload: err.response.data
+  })
+})
+
+
+}
 
 
 // claim user shift
-export const claimUserShift = (shift, userID, history) => dispatch => {
+export const claimUserShift = (shift, name,email, user, history) => dispatch => {
 
-console.log('inside claimUserShift action   ');
+console.log('inside claimUserShift action   '+shift.status+'         '+shift.user+'      '+name+'      '+email);
 
 const shiftData = {
 user: shift.user,
@@ -128,11 +207,13 @@ shiftDate: shift.shiftDate,
 shiftType: shift.shiftType,
  timeIn: shift.timeIn,
  timeOut: shift.timeOut,
- hours: shift.hours
-
+ hours: shift.hours,
+ status: shift.status,
+ name: name,
+ email: email
 }
 
-axios.post('/api/proctor/claimShift/'+ userID, shiftData)
+axios.post('/api/proctor/claimShift/'+ user, shiftData)
 .then(res => {
 
   dispatch({
@@ -153,7 +234,43 @@ dispatch({
 }
 
 
+export const claimTheShift = (shift, user, history) => dispatch => {
 
+  console.log('inside claimTheShift action    '+user);
+
+  const shiftData = {
+  user: shift.user,
+  sid: shift.sid,
+  hall: shift.hall,
+  shiftDate: shift.shiftDate,
+  shiftType: shift.shiftType,
+   timeIn: shift.timeIn,
+   timeOut: shift.timeOut,
+   hours: shift.hours,
+   status: shift.status
+
+  }
+
+  axios.post('/api/proctor/claimTheShift/'+ user, shiftData)
+  .then(res => {
+
+    dispatch({
+    type: actionTypes.GET_UPDATED_SHIFTS,
+    payload: res.data
+
+    })
+
+  history.push('/dashboard')
+
+  }).catch(err => {
+  console.log('inside error  ');
+  dispatch({
+    type: actionTypes.GET_ERRORS,
+    payload: err.response.data
+  })
+  })
+
+}
 
 
 
@@ -170,7 +287,8 @@ shiftDate: shift.shiftDate,
 shiftType: shift.shiftType,
  timeIn: shift.timeIn,
  timeOut: shift.timeOut,
- hours: shift.hours
+ hours: shift.hours,
+ status: shift.status
 
 }
 

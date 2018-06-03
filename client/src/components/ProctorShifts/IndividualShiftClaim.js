@@ -15,6 +15,10 @@ constructor(props) {
   const individualShift = this.props.location.state.referrerShift;
   const user = this.props.location.state.referrerUser;
   const date = individualShift.shiftDate;
+
+
+
+
   console.log('the user for claimin the shift   '+user );
 const date1 = new Date(date);
 
@@ -82,7 +86,7 @@ componentWillReceiveProps(nextProps) {
 
 onSubmit(e) {
 e.preventDefault();
-
+ const user = this.props.location.state.referrerUser;
 const shiftData = {
 
 user: this.state.user,
@@ -96,15 +100,21 @@ hours: this.state.hours
 
 }
 
-const{checkDroppedShift}=this.props.shiftsView;
 
+const {checkDroppedShift} =this.props.shiftsView;
+//const {checkStatus} = this.props.shiftsView;
 
 this.props.checkForSelectedDateAndType(shiftData.shiftDate, shiftData.shiftType);
 
 
 
 
-  setTimeout(function() {this.checkres(shiftData); }.bind(this), 1000);
+  setTimeout(function() {   this.props.checkStatus(shiftData.sid); }.bind(this), 1000);
+
+
+
+
+  setTimeout(function() {this.checkres(); }.bind(this), 2000);
 
 
 
@@ -113,23 +123,121 @@ this.props.checkForSelectedDateAndType(shiftData.shiftDate, shiftData.shiftType)
 
 
 
-checkres(shiftData) {
-
+checkres() {
+  console.log('inside checkres function           ');
+ const userid = this.props.location.state.referrerUser;
   const {successVal} = this.props.shiftsView;
-  console.log('the value of success is    '+successVal.success);
+  const {user}=this.props.shiftsView;
+  const {successDropOrNot} = this.props.shiftsView;
+let shiftData = {};
+console.log('THE VALUE OF SUCCESS AND successVal  IS    success    '+Object.values(successDropOrNot)+'        successVal        '+Object.values(successVal));
 
-  if(successVal){
+const val = Object.values(successDropOrNot);
+console.log('the values of val is       =>      '+val);
+if(val === true) {
+  const test = true;
+  console.log('yes');
+} else {
+  console.log('no');
+  const test = false;
+}
+ if(val) {
+    console.log('the status is    '+ val+ '           '+this.state.user);
+      shiftData = {
 
-    this.props.claimUserShift(shiftData, this.state.user, this.props.history);
+     user: this.state.user,
+     sid: this.state.sid,
+     shiftDate: this.state.shiftDate,
+     hall: this.state.hall,
+     shiftType: this.state.shiftType,
+     timeIn: this.state.timeIn,
+     timeOut: this.state.timeOut,
+     hours: this.state.hours,
+     status: 'reclaim'
+
+     }
+
+   }
+   else {
+     console.log('the status is    '+ val);
+      shiftData = {
+
+     user: this.state.user,
+     sid: this.state.sid,
+     shiftDate: this.state.shiftDate,
+     hall: this.state.hall,
+     shiftType: this.state.shiftType,
+     timeIn: this.state.timeIn,
+     timeOut: this.state.timeOut,
+     hours: this.state.hours,
+     status: 'claim'
+
+     }
+   }
 
 
+  console.log('the value of success is    '+successVal.success+'        '+shiftData.user);
 
+
+if(successVal){
+
+  if(val){
+    console.log('the shift was dropped by    '+Object.values(user));
+    const droppedbyid = Object.values(user);
+
+
+  this.props.getIdForUser(shiftData.sid);
+
+
+      setTimeout(function() {this.getUserId(shiftData);}.bind(this), 1000);
 
   }
+
+else {
+  console.log('The shift was not dropped by anyone right now              '+shiftData.hall+'     '+shiftData.status);
+
+    setTimeout(function() {this.props.claimTheShift(shiftData, userid, this.props.history);}.bind(this), 1000);
+
+}
+
+
+}
+
+
+
   else {
     const errors = {};
     errors.notToClaim = 'LOL. Try later';
   }
+
+}
+
+
+
+getUserId(shiftData){
+const {userid} = this.props.shiftsView;
+console.log('the user who dropped this shift earlier is   ->       '+Object.values(userid.user));
+
+  this.props.getUserName(Object.values(userid.user));
+
+
+    setTimeout(function() {this.getResult(shiftData);}.bind(this), 1000);
+
+
+
+}
+
+
+getResult(shiftData) {
+   const user = this.props.location.state.referrerUser;
+   console.log('user !!!!   '+user);
+  const {name} = this.props.shiftsView;
+  const {email} = this.props.shiftsView;
+  const em = email.email;
+  const nm = name.name;
+  console.log('The sento name and email are    '+name.name+'        '+email.email+'          '+user);
+  setTimeout(function() {this.props.claimUserShift(shiftData, nm,em,user,  this.props.history);}.bind(this), 1000);
+
 
 }
 
@@ -244,8 +352,12 @@ const mapDispatchToProps = dispatch => {
 
   return {
 
-    claimUserShift: (shift, userID, history) => dispatch(actions.claimUserShift(shift, userID, history)),
-    checkForSelectedDateAndType: (shiftDate, shiftType) => dispatch(actions.checkForSelectedDateAndType(shiftDate, shiftType))
+    claimUserShift: (shift,nm,em, user, history) => dispatch(actions.claimUserShift(shift, nm, em, user, history)),
+    checkForSelectedDateAndType: (shiftDate, shiftType) => dispatch(actions.checkForSelectedDateAndType(shiftDate, shiftType)),
+    checkStatus: (sid) => dispatch(actions.checkStatus(sid)),
+    getUserName: (user) => dispatch(actions.getUserName(user)),
+    claimTheShift: (shift, user, history) => dispatch(actions.claimTheShift(shift, user, history)),
+    getIdForUser: (sid) => dispatch(actions.getIdForUser(sid))
     }
 
 }
