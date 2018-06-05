@@ -31,6 +31,11 @@ import IndividualShift from './components/Schedule/IndividualShift';
 import MySchedule from './components/Schedule/MySchedule';
 import IndividualShiftReClaim from './components/ProctorShifts/IndividualShiftReClaim';
 import ApplyShiftsFilters from './components/applyShiftsFilters/ApplyShiftsFilters';
+import MyMessages from './components/myMessages/MyMessages';
+
+
+
+
 // check for token
 
 if(localStorage.jwtToken) {
@@ -181,6 +186,13 @@ class App extends Component {
                   exact
                   path="/applyShiftsFilters"
                   component={ApplyShiftsFilters}
+                />
+              </Switch>
+              <Switch>
+                <Private
+                  exact
+                  path="/myMessages"
+                  component={MyMessages}
                 />
               </Switch>
             </div>

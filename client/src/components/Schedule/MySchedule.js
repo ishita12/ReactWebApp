@@ -21,9 +21,37 @@ constructor(props) {
   }
   const  user  = this.props.auth.user;
   console.log('mySchedule user is    '+user.id);
-this.props.getMySchedule(user.id);
+
+ this.props.getAvailableShiftIds();
+
+
+  setTimeout(function() { this.scheduleFunction(user.id)  }.bind(this), 2000);
+
+
 
 }
+
+scheduleFunction(userid){
+const {shiftids} = this.props.scheduleReducer;
+const idarr = [];
+for(var i in Object.values(shiftids)) {
+
+  console.log('in for loop for shiftids ids   ');
+  if (shiftids.hasOwnProperty(i)) {
+
+     idarr.push(Object.values(shiftids[i]));
+      console.log('test1' + " -> " + Object.values(shiftids[i]));
+ }
+
+}
+const array = Object.values(shiftids);
+
+console.log('The ids of available shifts   ->>>>>>>>>    '+ idarr);
+
+  this.props.getMySchedule(userid,idarr);
+}
+
+
 dropShift(shift) {
   const  userID  = this.props.auth.user;
 console.log('drop shift  with id  '+'    '+shift._id+'    '+shift.hall+'      '+userID.id);
@@ -173,8 +201,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
 
   return {
-    getMySchedule: (uid) => dispatch(actions.getMySchedule(uid)),
-    saveDroppedShift: (shift, id) => dispatch(actions.saveDroppedShift(shift, id))
+    getMySchedule: (uid, idarr) => dispatch(actions.getMySchedule(uid,idarr)),
+    saveDroppedShift: (shift, id) => dispatch(actions.saveDroppedShift(shift, id)),
+    getAvailableShiftIds: () => dispatch(actions.getAvailableShiftIds())
     }
 
 }

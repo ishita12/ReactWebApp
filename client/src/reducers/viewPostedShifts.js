@@ -21,7 +21,8 @@ const initialState = {
   user: '',
   name: '',
   email: '',
-  userid: ''
+  userid: '',
+  shiftids: []
 }
 
 
@@ -106,6 +107,7 @@ case actionTypes.GET_DROPPED_USERID:
     ...state,
     userid: action.payload
   }
+
 
   default:
     return state;

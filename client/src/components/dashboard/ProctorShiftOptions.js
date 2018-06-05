@@ -5,6 +5,7 @@ import ViewShifts from '../PostShifts/ViewShifts';
 import ViewPostedShifts from '../ProctorShifts/ViewPostedShifts';
 import MySchedule from '../Schedule/MySchedule';
 import ApplyShiftsFilters from '../applyShiftsFilters/ApplyShiftsFilters';
+import MyMessages from '../myMessages/MyMessages';
 import { Link } from 'react-router-dom';
 
 const ProctorShiftOptions = (props) => {
@@ -21,14 +22,11 @@ const ProctorShiftOptions = (props) => {
           <i className="fas fa-user-circle text-info mr-1"></i>
           My Schedule
           </Link>
-          <Link to="/viewPostedShifts"  component={ViewPostedShifts} className="btn btn-light">
+          <Link to="/myMessages"  component={MyMessages} className="btn btn-light">
             <i className="fas fa-user-circle text-info mr-1"></i>
-          View Dropped Shifts
+        My Messages
             </Link>
-            <Link to="/applyShiftsFilters"  component={ApplyShiftsFilters} className="btn btn-light">
-              <i className="fas fa-user-circle text-info mr-1"></i>
-            Apply Shifts Filters
-              </Link>
+
 
 
           </div>

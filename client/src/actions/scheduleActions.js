@@ -11,10 +11,10 @@ export const scheduleLoading = () => {
 }
 
 
-export const getMySchedule = (uid) => dispatch => {
+export const getMySchedule = (uid,idarr) => dispatch => {
   dispatch(scheduleLoading());
-  console.log('mySchedule user id  is   '+uid);
-  axios.get(`/api/proctor/mySchedule/${uid}`)
+  console.log('mySchedule user id  is   '+uid,idarr);
+  axios.get(`/api/proctor/mySchedule/${uid}/${idarr}`)
   .then(res => {
   dispatch({
     type: actionTypes.GET_MY_SCHEDULE,
@@ -27,6 +27,29 @@ export const getMySchedule = (uid) => dispatch => {
     })
   })
 }
+
+
+
+// getAvailableShiftIds
+
+export const getAvailableShiftIds = () => dispatch => {
+
+  console.log('Inside  getAvailableShiftIds  action   ');
+  axios.get(`/api/proctor/getAvailableShiftIds`)
+  .then(res => {
+  dispatch({
+    type: actionTypes.GET_AVAILABLE_IDS,
+    payload: res.data
+  })
+  }).catch(err => {
+    dispatch({
+      type: actionTypes.GET_AVAILABLE_IDS,
+      payload: null
+    })
+  })
+}
+
+
 
 
 

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const PostShift = require('../../models/PostShift');
 const Users = require('../../models/User');
+const Message = require('../../models/Message');
 const DroppedShifts = require('../../models/DroppedShifts');
 const validatePostShiftInput = require('../../validation/PostShift');
 const ProctorClaimShift = require('../../models/ProctorShift');
@@ -1332,21 +1333,33 @@ PostShift.find()
 
 
 
-// @route Get api/postShift
-// @desc Get all posted shifts
+// @route Get api/proctor
+// @desc Get Individual schedule
 // @access Private
 
-router.get('/mySchedule/:uid', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/mySchedule/:uid/:idarr', passport.authenticate('jwt', { session: false }), (req, res) => {
 const errors = {};
 console.log('mySchedule user id is   '+req.params.uid);
-ProctorClaimShift.find({user: req.params.uid})
+const arr = req.params.idarr;
+let arr2=[];
+
+arr2=arr.split(',');
+
+for(var i in arr2) {
+  console.log('the array 2 elements are ->      '+arr2[i]);
+}
+
+
+
+console.log('The available ids are   ->             '+typeof req.params.idarr);
+ProctorClaimShift.find({user: req.params.uid, sid: {$in:  arr2}  })
 .populate('shift', ['shiftDate', 'hall', 'shiftType', 'timeIn', 'timeOut', 'hours'])
 .then(myShifts => {
   if(!myShifts) {
     errors.myShifts = 'There are no shifts posted';
     res.status(404).json();
   } else {
-    console.log('inside all shifts  '+myShifts._id);
+    console.log('inside all shifts  '+myShifts);
     res.json(myShifts);
   }
 }).catch(err => {
@@ -1356,6 +1369,36 @@ ProctorClaimShift.find({user: req.params.uid})
 
 
 });
+
+
+
+// @route Get api/proctor
+// @desc Get ids of all available shifts
+// @access Private
+
+router.get('/getAvailableShiftIds', passport.authenticate('jwt', { session: false }), (req, res) => {
+const errors = {};
+console.log('Inside getAvailableShiftIds route   ');
+PostShift.find()
+.select({"_id":1})
+.then(shiftids => {
+  if(!shiftids) {
+    errors.shiftids = 'There are no shifts posted';
+    res.status(404).json();
+  } else {
+    console.log('inside getAvailableShiftIds shifts  '+shiftids);
+    res.json(shiftids);
+  }
+}).catch(err => {
+  res.status(404).json({myShifts: 'There are no shifts that have been posted'});
+});
+
+
+
+});
+
+
+
 
 
 
@@ -1481,8 +1524,128 @@ PostShift.findOne({shiftDate: req.params.shiftDate, shiftType: req.params.shiftT
 
 
 
+// @route Get api/proctor
+// @desc Get dropped shifts for logged In user
+// @access Private
+
+router.get('/checkIfUserHasDroppedShifts/:userID', passport.authenticate('jwt', { session: false }), (req, res) => {
+const errors = {};
+//console.log('loggedin user id is   '+req.user.id);
+console.log('Inside checkIfUserHasDroppedShifts route   logged In user   ->   '+req.params.userID);
+
+DroppedShifts.find({user: req.params.userID})
+.then(droppedShiftsByloggeduser => {
+console.log('the details are    ->    '+Object.values(droppedShiftsByloggeduser));
+
+  if(Object.keys(droppedShiftsByloggeduser).length === 0) {
+console.log('This user has not dropped any shifts yet     ');
+res.json({droppedShiftsByloggeduser: null});
+
+  } else {
+   console.log('The shifts dropped by loggedIn user are  ->    '+ Object.values(droppedShiftsByloggeduser));
+    res.json(droppedShiftsByloggeduser);
+  }
+}).catch(err => {
+  res.status(404).json(err);
+});
+
+});
 
 
+
+
+
+
+// @route POST api/proctor
+// @desc Create a shift
+// @access Private
+
+router.post('/sendMessage', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+  const errors = {};
+ console.log('Inside send message route !!!!    ');
+  Message.findOne({user: req.body.user, sid: req.body.sid}, (err, newMsg) => {
+
+
+if(newMsg) {
+console.log('There is already an entry for this shift for this user ');
+res.json({msg: "No new message"});
+
+}
+else {
+
+const ds1 = new Date(req.body.shiftDate);
+console.log('Test value of date ->         '+ds1);
+
+    const message = 'You have missed this shift';
+
+      const newMessage = new Message({
+      user: req.body.user,
+      sid: req.body.sid,
+      hall: req.body.hall,
+      shiftType: req.body.shiftType,
+      shiftDate: req.body.shiftDate,
+      timeIn: req.body.timeIn,
+      timeOut: req.body.timeOut,
+      hours: req.body.hours,
+      message: message
+
+      });
+
+
+      //let date3 = date1.toISOString();
+      console.log('inside route send message     '+'    '+req.body.hall+'     '+req.body.shiftType+ '   '+newMessage.shiftDate);
+      newMessage.save().then(msg => {
+        console.log('yes  it has been saved   ');
+        res.json(msg);
+      }).catch(err => {
+        console.log('its an error   ');
+        res.status(404).json(err);
+      });
+
+
+}
+
+
+
+  });
+
+
+
+
+});
+
+
+
+
+
+
+// @route Get api/proctor
+// @desc Get messages
+// @access Private
+
+router.get('/getMyMessages/:userID', passport.authenticate('jwt', { session: false }), (req, res) => {
+const errors = {};
+//console.log('loggedin user id is   '+req.user.id);
+console.log('Inside getMyMessages route   logged In user   ->   '+req.params.userID);
+
+Message.find({user: req.params.userID})
+.then(myMessages => {
+
+
+  if(!myMessages) {
+console.log('This user has no messages yet     ');
+res.json({myMessages: 'no new messages'});
+
+  } else {
+  console.log('Yes you have messages        ->   '+myMessages);
+    res.json(myMessages);
+  }
+}).catch(err => {
+  res.status(404).json(err);
+});
+
+});
 
 
 

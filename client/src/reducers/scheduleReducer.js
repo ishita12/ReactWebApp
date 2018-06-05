@@ -8,7 +8,12 @@ const initialState = {
   loading: false,
 myShifts: {},
 droppedShifts: {},
-newDroppedShifts: {}
+newDroppedShifts: {},
+shiftids: [],
+message: '',
+droppedShiftsByloggeduser: {},
+displayMessages: {},
+myMessages: {}
 }
 
 
@@ -16,12 +21,12 @@ newDroppedShifts: {}
 
 
 const scheduleReducer = (state= initialState, action) => {
-console.log('1');
+
 switch(action.type) {
 
 
 case actionTypes.VIEW_SCHEDULE_LOADING:
-console.log('2');
+
   return {
    ...state,
    loading: true
@@ -49,8 +54,32 @@ console.log('2');
       ...state,
       newDroppedShifts: action.payload
     }
+    case actionTypes.GET_AVAILABLE_IDS:
+      return {
+        ...state,
+        shiftids: action.payload
+      }
+   case actionTypes.GET_DROPPED_SHIFTS_FOR_LOGGEDIN_USER:
+     return {
+      ...state,
+      droppedShiftsByloggeduser: action.payload,
+      message: action.payload
+
+     }
+
+  case actionTypes.SEND_MESSAGES:
+    return {
+
+    ...state,
+    displayMessages: action.payload
 
 
+    }
+  case actionTypes.GET_MY_MESSAGES:
+    return {
+      ...this.state,
+      myMessages: action.payload
+    }
 
   default:
     return state;

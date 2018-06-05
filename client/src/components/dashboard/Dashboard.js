@@ -36,6 +36,11 @@ this.state = {
    }
 
   }
+// check if user has dropped shifts and if so than save message
+
+
+
+
 
 
   }

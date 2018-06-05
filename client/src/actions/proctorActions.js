@@ -13,6 +13,43 @@ export const setViewShiftsLoading = () => {
 
 
 
+
+
+
+
+
+
+// create a shift
+export const checkIfUserHasDroppedShifts = (userID) => dispatch => {
+console.log('In checkIfUserHasDroppedShifts action   ');
+
+  axios.get(`/api/proctor/checkIfUserHasDroppedShifts/${userID}`).then(res => {
+
+   console.log('In checkIfUserHasDroppedShifts action   then');
+
+    dispatch({
+      type: actionTypes.GET_DROPPED_SHIFTS_FOR_LOGGEDIN_USER,
+      payload: res.data
+    })
+
+  }).catch(err => {
+    console.log('no data   ');
+    dispatch({
+      type: actionTypes.GET_ERRORS,
+      payload: err.response.data
+    })
+  });
+
+};
+
+
+
+
+
+
+
+
+
 export const getAllShifts = (ids) => dispatch => {
 
   for(var i in ids){
