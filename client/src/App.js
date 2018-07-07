@@ -32,8 +32,8 @@ import MySchedule from './components/Schedule/MySchedule';
 import IndividualShiftReClaim from './components/ProctorShifts/IndividualShiftReClaim';
 import ApplyShiftsFilters from './components/applyShiftsFilters/ApplyShiftsFilters';
 import MyMessages from './components/myMessages/MyMessages';
-
-
+import MapContainer from './components/mapComponent/MapContainer';
+import ViewShiftsPerHall from './components/mapComponent/ViewShiftsPerHall';
 
 
 // check for token
@@ -193,6 +193,20 @@ class App extends Component {
                   exact
                   path="/myMessages"
                   component={MyMessages}
+                />
+              </Switch>
+              <Switch>
+                <Private
+                  exact
+                  path="/mymap"
+                  component={MapContainer}
+                />
+              </Switch>
+              <Switch>
+                <Private
+                  exact
+                  path="/viewShiftsPerHall"
+                  component={ViewShiftsPerHall}
                 />
               </Switch>
             </div>

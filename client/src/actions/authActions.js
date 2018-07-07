@@ -41,6 +41,7 @@ localStorage.setItem('jwtToken', token);
 setAuthToken(token);
 // decode token to get user data
 const decoded = jwt_decode(token);
+console.log('line 44   ');
 // set current user
 dispatch(setCurrentUser(decoded));
 }).catch(err => {

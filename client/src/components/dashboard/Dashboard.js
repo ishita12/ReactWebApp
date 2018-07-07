@@ -20,6 +20,7 @@ class Dashboard extends Component {
   constructor(props) {
   super(props);
 
+
 this.state = {
   idArray: []
 }
@@ -41,8 +42,8 @@ this.state = {
 
 
 
-
-
+//const hallSelect= this.props.location.state;
+//console.log('the selected hall is   '+hallSelect);
   }
 
 componentDidMount() {

@@ -43,7 +43,32 @@ console.log('In checkIfUserHasDroppedShifts action   ');
 };
 
 
+// get all shifts by hall
 
+
+export const getAllShifts1 = (ids) => dispatch => {
+
+  for(var i in ids){
+      console.log('inside getAllShifts1 method    '+ids[i]);
+  }
+console.log('type of ids   '+typeof ids);
+  dispatch(setViewShiftsLoading());
+
+  axios.get(`/api/proctor/shifts1/${ids}`)
+  .then(res => {
+    console.log('inside shifts1');
+  dispatch({
+    type: actionTypes.VIEW_POSTED_SHIFTS1,
+    payload: res.data
+  })
+  }).catch(err => {
+    console.log('inside error');
+    dispatch({
+      type: actionTypes.GET_ERRORS,
+      payload: err.response.data
+    })
+  })
+}
 
 
 
@@ -401,6 +426,58 @@ console.log('get claimed shift ids action  ');
 }
 
 
+//getMyShifts
+
+export const getMyShifts = (shifts1, hallIs) => dispatch => {
+
+console.log('get getMyShifts action  ');
+
+  axios.get(`/api/proctor/getMyShifts/${hallIs}/${shifts1}`)
+  .then(res => {
+    console.log('inside getMyShifts then');
+  dispatch({
+    type: actionTypes.GET_MY_SHIFTS,
+    payload: res.data
+  })
+  }).catch(err => {
+    console.log('inside error');
+    dispatch({
+      type: actionTypes.GET_ERRORS,
+      payload: err.response.data
+    })
+  })
+
+}
+
+
+
+
+export const allShifts1 = () => dispatch => {
+
+console.log('inside allShifts1 action  ');
+
+axios.get('/api/proctor/allShifts1')
+.then(res => {
+console.log('then   ');
+dispatch({
+type: actionTypes.GET_ALL_SHIFTS1,
+payload: res.data
+
+})
+
+
+}).catch(err => {
+console.log('error  ');
+dispatch({
+
+type: actionTypes.GET_ERRORS,
+payload: err.response.data
+
+})
+
+})
+
+}
 
 export const allShifts = () => dispatch => {
 

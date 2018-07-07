@@ -6,6 +6,7 @@ import ViewPostedShifts from '../ProctorShifts/ViewPostedShifts';
 import MySchedule from '../Schedule/MySchedule';
 import ApplyShiftsFilters from '../applyShiftsFilters/ApplyShiftsFilters';
 import MyMessages from '../myMessages/MyMessages';
+import MapContainer from '../mapComponent/MapContainer';
 import { Link } from 'react-router-dom';
 
 const ProctorShiftOptions = (props) => {
@@ -26,7 +27,10 @@ const ProctorShiftOptions = (props) => {
             <i className="fas fa-user-circle text-info mr-1"></i>
         My Messages
             </Link>
-
+            <Link to="/mymap"  component={MapContainer} className="btn btn-light">
+              <i className="fas fa-user-circle text-info mr-1"></i>
+            View on map
+              </Link>
 
 
           </div>

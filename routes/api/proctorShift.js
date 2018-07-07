@@ -16,7 +16,7 @@ const nodemailer = require('nodemailer');
 
 router.get('/all/:ids', passport.authenticate('jwt', { session: false }), (req, res) => {
 const errors = {};
-console.log('loggedin user id is  in all route 1'+req.user.id);
+console.log('loggedin user id is  in all 1 route 1'+req.user.id);
 
 const ids = req.params.ids.split(",");
 console.log('ids are   '+req.params.ids);
@@ -48,6 +48,44 @@ PostShift.find({_id: {$nin: ids}})
 
 
 
+
+
+// @route Get api/proctor
+// @desc Get all posted shifts
+// @access Private
+
+router.get('/shifts1/:ids', passport.authenticate('jwt', { session: false }), (req, res) => {
+const errors = {};
+console.log('loggedin user id is  in allshifts1 route'+req.user.id);
+
+const ids = req.params.ids.split(",");
+console.log('ids are   '+req.params.ids);
+//console.log('test the ids      '+Object.values(req.body.ids)[0]);
+
+
+
+for(var i in ids){
+  console.log('in allshifts1 route   '+ids[i]);
+}
+
+
+PostShift.find({_id: {$nin: ids}})
+.select({"_id": 1})
+.then(postedShifts => {
+  if(!postedShifts) {
+    errors.noPostedShifts = 'There are no shifts posted or that have not been claimed';
+    res.status(404).json();
+  } else {
+    console.log(' The shifts that have not been claimed  in allshifts1 route   '+  postedShifts);
+    res.json(postedShifts);
+  }
+}).catch(err => {
+  res.status(404).json({postedShift: 'There are no shifts that have been posted'});
+});
+
+
+
+});
 
 
 
@@ -1310,7 +1348,7 @@ res.json({successDropOrNot: 0});
 
 router.get('/allShifts', passport.authenticate('jwt', { session: false }), (req, res) => {
 const errors = {};
-console.log('loggedin user id is  in all route '+req.user.id);
+console.log('loggedin user id is  in allShifts 2 route '+req.user.id);
 
 
 
@@ -1327,6 +1365,90 @@ PostShift.find()
   res.status(404).json({postedShift: 'There are no shifts that have been posted'});
 });
 });
+
+
+
+
+// @route Get api/proctor
+// @desc Get all posted shifts
+// @access Private
+
+router.get('/allShifts1', passport.authenticate('jwt', { session: false }), (req, res) => {
+const errors = {};
+console.log('loggedin user id is  in allShifts1 1 route1 '+req.user.id);
+
+
+
+PostShift.find()
+.select({"_id": 1})
+.then(postedShifts => {
+  if(!postedShifts) {
+    errors.noPostedShifts = 'There are no shifts posted or that have not been claimed';
+    res.status(404).json();
+  } else {
+    console.log('inside all available shifts  '+postedShifts);
+    res.json(postedShifts);
+  }
+}).catch(err => {
+  res.status(404).json({postedShift: 'There are no shifts that have been posted'});
+});
+});
+
+/*
+console.log('mySchedule user id is   '+req.params.uid);
+const arr = req.params.idarr;
+let arr2=[];
+
+arr2=arr.split(',');
+
+for(var i in arr2) {
+  console.log('the array 2 elements are ->      '+arr2[i]);
+}
+
+
+*/
+
+
+// @route Get api/proctor
+// @desc Get Shifts For selected hall
+// @access Private
+
+
+router.get('/getMyShifts/:hallIs/:shifts1', passport.authenticate('jwt', { session: false }), (req, res) => {
+const errors = {};
+console.log('mySchedule user id is   '+req.params.hallIs);
+const arr = req.params.shifts1;
+let arr2=[];
+
+arr2=arr.split(',');
+
+for(var i in arr2) {
+  console.log('the array 2 elements are ->      '+arr2[i]);
+}
+
+
+
+console.log('The available ids are   ->             '+typeof req.params.shifts1);
+PostShift.find({hall: req.params.hallIs, _id: {$in:  arr2}  })
+.then(myShifts1 => {
+  if(!myShifts1) {
+    errors.myShifts1 = 'There are no shifts posted';
+    res.status(404).json();
+  } else {
+    console.log('inside all shifts  '+myShifts1);
+    res.json(myShifts1);
+  }
+}).catch(err => {
+  res.status(404).json({myShifts1: 'There are no shifts that have been posted'});
+});
+
+
+
+});
+
+
+
+
 
 
 

@@ -96,7 +96,7 @@ bcrypt.compare(password, user.password).then(isMatch => {
     console.log('line 97   '+user.role);
 const payload = { id: user.id, name: user.name, avatar: user.avatar, role: user.role };// creating jwt payload
 
-  jwt.sign(payload, keys.secret, {expiresIn: 3600}, (err, token) => {
+  jwt.sign(payload, keys.secretOrKey, {expiresIn: 3600}, (err, token) => {
 
       res.json({success: true, token: 'Bearer ' + token });
   });

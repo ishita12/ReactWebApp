@@ -12,6 +12,7 @@ class ViewPostedShifts  extends React.Component {
 
 constructor(props) {
 super(props);
+
 this.state = {
   errors: '',
   redirect: false,

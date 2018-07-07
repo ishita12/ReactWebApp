@@ -7,6 +7,8 @@ const initialState = {
 
   loading: false,
   shifts: {},
+  shifts1: {},
+  myShifts1: {},
   updatedShifts: {},
   claimedIds: {},
   allShifts: {},
@@ -44,6 +46,15 @@ console.log('2');
 
  }
 
+ case actionTypes.VIEW_POSTED_SHIFTS1:
+ console.log('2');
+   return {
+    ...state,
+    shifts1: action.payload,
+    loading: false
+
+
+  }
 
   case actionTypes.VIEW_SHIFTS_LOADING:
   return {
@@ -71,6 +82,18 @@ console.log('2');
       shifts: action.payload
     }
 
+    case actionTypes.GET_ALL_SHIFTS1:
+      return {
+        ...state,
+        shifts1: action.payload
+      }
+
+    case actionTypes.GET_MY_SHIFTS:
+      return {
+
+        ...state,
+        myShifts1: action.payload
+      }
  case actionTypes.GET_DROPPED_SHIFTS_IDS:
    return {
    ...state,
